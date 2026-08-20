@@ -18,10 +18,6 @@
   }
   html { font-size: 16px; scroll-behavior: smooth; }
   body { font-family: var(--font-body); background: var(--bg); color: var(--body-text); min-height: 100vh; line-height: 1.65; }
-  #api-banner { background: var(--gold); color: var(--ink); text-align: center; padding: 10px 20px; font-family: var(--font-head); font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; }
-  #api-banner input { padding: 5px 12px; border: 2px solid var(--ink); border-radius: var(--radius-sm); font-family: var(--font-head); font-size: 0.82rem; width: 320px; max-width: 100%; background: rgba(255,255,255,0.85); }
-  #api-banner button { padding: 5px 14px; background: var(--ink); color: var(--white); border: none; border-radius: var(--radius-sm); font-family: var(--font-head); font-weight: 700; cursor: pointer; font-size: 0.82rem; }
-  #api-set-msg { display: none; font-size: 0.82rem; }
   nav { background: var(--white); border-bottom: 2px solid var(--teal-light); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .logo-icon { width: 40px; height: 40px; background: var(--teal); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
@@ -127,7 +123,7 @@
   @media (prefers-reduced-motion: reduce) { .spinner { animation: none; border-top-color: var(--teal); } * { transition: none !important; } }
   .image-input-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
   .image-input-row .btn-sm { flex: 1; min-width: 120px; justify-content: center; }
-  .image-preview-strip { display: none; margin-top: 10px; background: var(--teal-pale); border: 1.5px solid var(--teal-light); border-radius: var(--radius-md); padding: 10px 12px; display: none; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .image-preview-strip { display: none; margin-top: 10px; background: var(--teal-pale); border: 1.5px solid var(--teal-light); border-radius: var(--radius-md); padding: 10px 12px; align-items: center; gap: 10px; flex-wrap: wrap; }
   .image-preview-strip img { max-height: 80px; max-width: 120px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); object-fit: cover; }
   .image-preview-strip .img-info { flex: 1; font-family: var(--font-head); font-size: 0.8rem; }
   .image-preview-strip .img-name { font-weight: 700; color: var(--teal); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
@@ -140,13 +136,6 @@
 </style>
 </head>
 <body>
-
-<div id="api-banner" style="display:none;">
-  <span>🔑 Enter your Claude API key to unlock AI features:</span>
-  <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." />
-  <button onclick="saveApiKey()">Save Key</button>
-  <span id="api-set-msg">✅ Key saved for this session!</span>
-</div>
 
 <nav>
   <a href="#" class="logo">
@@ -183,7 +172,6 @@
       <div class="ff-text" id="fun-fact-text">There are over 7,000 languages spoken in the world today — and about half of them are in danger of disappearing.</div>
     </div>
   </div>
-
   <div class="privacy-strip">
     <span class="pr-icon">🔒</span>
     <span>CultureReads does not store, save, or share any text you enter. All translations happen in real time and are never recorded. This is a safe space for learning.</span>
@@ -297,6 +285,7 @@
         <div class="ocr-spinner" id="ocr-spinner"></div>
         <button class="btn btn-sm btn-coral" onclick="clearImage()" style="padding:5px 10px;font-size:0.75rem;">✕ Clear</button>
       </div>
+
       <div class="toggle-row">
         <span class="toggle-label">🎓 Simplify for younger readers (Grades 3–6)</span>
         <label class="toggle">
@@ -385,7 +374,9 @@
 </footer>
 
 <script>
-  let apiKey = 'PASTE-YOUR-NEW-API-KEY-HERE';
+  // ── PROXY URL — API key lives securely in Cloudflare, never in this file ──
+  const PROXY_URL = 'https://culturereads-proxy.nishanth-raj-d17.workers.dev';
+
   let readSpeed = 1, currentUtterance = null, currentWordEl = null;
   let lastTranslation = '', lastCultural = '', lastTargetLang = '';
   let lastRequestTime = 0;
@@ -416,7 +407,7 @@
     {word:'Mamihlapinatapai',lang:'(Yaghan)',meaning:'A shared look between two people who both want the same thing'},
     {word:'Forelsket',lang:'(Norwegian)',meaning:'The euphoria of falling in love'},
     {word:'Wabi-Sabi',lang:'(Japanese)',meaning:'Finding beauty in imperfection and impermanence'},
-    {word:'Schadenfreude',lang:'(German)',meaning:'Pleasure from another person\'s misfortune'}
+    {word:'Schadenfreude',lang:'(German)',meaning:"Pleasure from another person's misfortune"}
   ];
 
   const funFacts = [
@@ -442,42 +433,55 @@
     document.getElementById('fun-fact-text').textContent = funFacts[Math.floor(Math.random()*funFacts.length)];
     if (localStorage.getItem('cr_seen_tip')) document.getElementById('onboarding-tip').style.display = 'none';
     else localStorage.setItem('cr_seen_tip','1');
-    const saved = sessionStorage.getItem('cr_api_key');
-    if (saved) { apiKey = saved; }
   });
 
   document.getElementById('input-text').addEventListener('input', function() {
     document.getElementById('char-count').textContent = this.value.length + ' / 3000';
   });
 
-  function saveApiKey() {
-    const val = document.getElementById('api-key-input').value.trim();
-    if (!val) { alert('Please enter an API key.'); return; }
-    apiKey = val; sessionStorage.setItem('cr_api_key', val);
-    document.getElementById('api-set-msg').style.display='inline';
-    document.getElementById('api-key-input').style.display='none';
-  }
-
+  // ── SINGLE callClaude function — all requests go through Cloudflare proxy ──
   async function callClaude(systemPrompt, userPrompt) {
-    if (!apiKey || apiKey === 'PASTE-YOUR-NEW-API-KEY-HERE') throw new Error('API key not configured. Please contact the site administrator.');
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(PROXY_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:1500,
-        system:systemPrompt,
-        messages:[{role:'user',content:userPrompt}]
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
       })
     });
-    if (!response.ok) { const err = await response.json().catch(()=>({})); throw new Error(err.error?.message||'API request failed. Please try again.'); }
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Request failed. Please try again.');
+    }
     const data = await response.json();
     return data.content[0].text;
+  }
+
+  // ── callClaudeWithImage — for OCR image requests through proxy ──
+  async function callClaudeWithImage(base64, mediaType) {
+    const response = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+            { type: 'text', text: 'Please extract all the text visible in this image. Return ONLY the extracted text exactly as it appears, preserving line breaks where natural. Do not add any commentary, explanation, labels, or formatting — just the raw text from the image. If there is no text in the image, reply with exactly: [NO TEXT FOUND]' }
+          ]
+        }]
+      })
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Could not read image.');
+    }
+    const data = await response.json();
+    return data.content[0].text.trim();
   }
 
   async function checkContentSafety(text) {
@@ -489,7 +493,6 @@ Respond ONLY with valid JSON in this exact format:
 {"safe": true, "reason": ""}
 or
 {"safe": false, "reason": "brief description of why it is inappropriate"}`;
-
     const raw = await callClaude(sys, `Please review this text for age-appropriateness:\n\n"${text}"`);
     const m = raw.match(/\{[\s\S]*\}/);
     return JSON.parse(m ? m[0] : raw);
@@ -501,19 +504,15 @@ or
     const targetLang = document.getElementById('target-lang').value;
     const simplify = document.getElementById('simplify-toggle').checked;
 
-    // Validate inputs
     if (!text) { showError('Please paste or type some text first.'); return; }
     if (!targetLang) { showError('Please select a language to translate into.'); return; }
 
-    // Rate limiting — cooldown between requests
     const now = Date.now();
     if (now - lastRequestTime < COOLDOWN_MS) {
       const wait = Math.ceil((COOLDOWN_MS - (now - lastRequestTime)) / 1000);
       showError(`Please wait ${wait} more second${wait !== 1 ? 's' : ''} before translating again.`);
       return;
     }
-
-    // Rate limiting — max requests per session
     if (requestCount >= MAX_REQUESTS_PER_SESSION) {
       showError('You have reached the maximum of 20 translations per session. Please refresh the page to continue.');
       return;
@@ -522,15 +521,13 @@ or
     clearError(); setLoading(true);
 
     try {
-      // Step 1: Content safety check
       const safety = await checkContentSafety(text);
       if (!safety.safe) {
         setLoading(false);
-        showError('⚠️ This text contains content that isn\'t appropriate for CultureReads. Please try different text.');
+        showError("⚠️ This text contains content that isn't appropriate for CultureReads. Please try different text.");
         return;
       }
 
-      // Step 2: Translate
       const systemPrompt = `You are CultureReads — a warm, knowledgeable multilingual cultural guide created for students aged 8-14, designed by Aria Kottaka Raj, passionate about inclusion and belonging.
 
 Your rules:
@@ -544,19 +541,18 @@ ${simplify ? '6. IMPORTANT: Simplify for younger readers (Grades 3-6). Use simpl
 ALWAYS respond with ONLY valid JSON:
 {"translation":"full translated text","cultural_notes":[{"term":"phrase","icon":"emoji","explanation":"student-friendly explanation"}],"pronunciation_tip":"brief tip about pronouncing this language","no_notes_message":"friendly message if no notes needed"}`;
 
-      const userPrompt = `Translate from ${sourceLang} to ${targetLang}:\n"${text}"`;
-      const raw = await callClaude(systemPrompt, userPrompt);
+      const raw = await callClaude(systemPrompt, `Translate from ${sourceLang} to ${targetLang}:\n"${text}"`);
       let result;
-      try { const m = raw.match(/\{[\s\S]*\}/); result = JSON.parse(m?m[0]:raw); }
+      try { const m = raw.match(/\{[\s\S]*\}/); result = JSON.parse(m ? m[0] : raw); }
       catch { throw new Error('Unexpected response. Please try again.'); }
 
       if (result.error === 'inappropriate_content') {
         setLoading(false);
-        showError('⚠️ This text contains content that isn\'t appropriate for CultureReads. Please try different text.');
+        showError("⚠️ This text contains content that isn't appropriate for CultureReads. Please try different text.");
         return;
       }
 
-      lastTranslation = result.translation||'';
+      lastTranslation = result.translation || '';
       lastCultural = result;
       lastTargetLang = targetLang;
       lastRequestTime = Date.now();
@@ -566,35 +562,31 @@ ALWAYS respond with ONLY valid JSON:
       renderCultural(result);
       setLoading(false);
 
-    } catch(err) {
-      setLoading(false);
-      showError(err.message||'Something went wrong. Please try again.');
-    }
+    } catch(err) { setLoading(false); showError(err.message || 'Something went wrong. Please try again.'); }
   }
 
   function renderTranslation(text, targetLang) {
     const content = document.getElementById('translated-content');
-    document.getElementById('output-placeholder').style.display='none';
+    document.getElementById('output-placeholder').style.display = 'none';
     const words = text.split(/(\s+)/);
     let html = '';
     words.forEach(part => {
       if (/\s+/.test(part)) html += part;
       else if (part.trim()) {
-        const clean = part.replace(/[.,!?;:"'()]/g,'');
+        const clean = part.replace(/[.,!?;:"'()]/g, '');
         html += `<span class="clickable-word" onclick="showWordInfo(this,'${clean.replace(/'/g,"\\'")}','${targetLang}')">${part}</span>`;
       }
     });
-    content.innerHTML = html; content.style.display='block';
-    document.getElementById('read-controls').style.display='flex';
-    document.getElementById('action-bar').style.display='flex';
-    document.getElementById('report-bar').style.display='flex';
+    content.innerHTML = html; content.style.display = 'block';
+    document.getElementById('read-controls').style.display = 'flex';
+    document.getElementById('action-bar').style.display = 'flex';
+    document.getElementById('report-bar').style.display = 'flex';
   }
 
   function renderCultural(result) {
     const cc = document.getElementById('cultural-content');
-    const notes = result.cultural_notes||[];
+    const notes = result.cultural_notes || [];
     const targetLang = document.getElementById('target-lang').value;
-
     const notesBtn = document.getElementById('translate-notes-btn');
     if (notesBtn) {
       notesBtn.style.display = 'inline-flex';
@@ -605,14 +597,13 @@ ALWAYS respond with ONLY valid JSON:
       const existingReset = document.getElementById('notes-reset-btn');
       if (existingReset) existingReset.remove();
     }
-
-    if (notes.length===0) {
-      cc.innerHTML=`<div class="note-item"><span class="note-icon">✅</span><div class="note-text">${result.no_notes_message||'This text translates quite directly — no special cultural notes needed!'}</div></div>`;
+    if (notes.length === 0) {
+      cc.innerHTML = `<div class="note-item"><span class="note-icon">✅</span><div class="note-text">${result.no_notes_message || 'This text translates quite directly — no special cultural notes needed!'}</div></div>`;
       return;
     }
     let html = '';
     if (result.pronunciation_tip) html += `<div class="note-item"><span class="note-icon">🗣️</span><div class="note-text"><strong>Pronunciation Tip:</strong> ${result.pronunciation_tip}</div></div>`;
-    notes.forEach(n => { html += `<div class="note-item"><span class="note-icon">${n.icon||'📖'}</span><div class="note-text"><strong>"${n.term}"</strong> — ${n.explanation}</div></div>`; });
+    notes.forEach(n => { html += `<div class="note-item"><span class="note-icon">${n.icon || '📖'}</span><div class="note-text"><strong>"${n.term}"</strong> — ${n.explanation}</div></div>`; });
     cc.innerHTML = html;
   }
 
@@ -622,21 +613,17 @@ ALWAYS respond with ONLY valid JSON:
     const cc = document.getElementById('cultural-content');
     const noteItems = cc.querySelectorAll('.note-item .note-text');
     if (!noteItems.length) return;
-
     const originalHTML = cc.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '⏳ Translating notes...';
-
     const noteTexts = [];
     noteItems.forEach(el => noteTexts.push(el.innerText));
     const combined = noteTexts.map((t, i) => `${i+1}. ${t}`).join('\n');
-
     try {
       const sys = `You are a helpful translator for a student educational website. Translate each numbered item into ${targetLang}, keeping the same numbered format. Keep the tone friendly and appropriate for students aged 8-14. Return ONLY the translated numbered list, nothing else.`;
       const raw = await callClaude(sys, combined);
       const lines = raw.trim().split('\n').filter(l => l.trim());
       const translatedTexts = lines.map(l => l.replace(/^\d+\.\s*/, '').trim());
-
       noteItems.forEach((el, i) => {
         if (translatedTexts[i]) {
           const strong = el.querySelector('strong');
@@ -644,15 +631,11 @@ ALWAYS respond with ONLY valid JSON:
             const strongText = strong.textContent;
             const rest = translatedTexts[i].replace(strongText, '').replace(/^[\s—–-]+/, '');
             el.innerHTML = `<strong>${strongText}</strong> — ${rest}`;
-          } else {
-            el.textContent = translatedTexts[i];
-          }
+          } else { el.textContent = translatedTexts[i]; }
         }
       });
-
       btn.innerHTML = '✅ Notes translated to ' + targetLang;
       btn.disabled = false;
-
       const resetBtn = document.createElement('button');
       resetBtn.id = 'notes-reset-btn';
       resetBtn.className = 'btn btn-sm';
@@ -665,7 +648,6 @@ ALWAYS respond with ONLY valid JSON:
         resetBtn.remove();
       };
       btn.parentElement.appendChild(resetBtn);
-
     } catch(err) {
       btn.innerHTML = '🌐 Translate notes to ' + targetLang;
       btn.disabled = false;
@@ -680,23 +662,23 @@ ALWAYS respond with ONLY valid JSON:
     document.getElementById('pop-word').textContent = word;
     document.getElementById('pop-phonetic').textContent = '...loading...';
     document.getElementById('pop-def').textContent = '...fetching...';
-    let top = rect.bottom+window.scrollY+8, left = rect.left+window.scrollX;
-    if (left+300>window.innerWidth-20) left=window.innerWidth-320;
-    if (left<10) left=10;
-    popover.style.top=top+'px'; popover.style.left=left+'px'; popover.style.display='block';
+    let top = rect.bottom + window.scrollY + 8, left = rect.left + window.scrollX;
+    if (left + 300 > window.innerWidth - 20) left = window.innerWidth - 320;
+    if (left < 10) left = 10;
+    popover.style.top = top + 'px'; popover.style.left = left + 'px'; popover.style.display = 'block';
     try {
       const sys = `You are a language tutor for students aged 8-14. Respond ONLY with JSON: {"phonetic":"simple pronunciation using English letters like /hel-OH/","definition":"simple 1-2 sentence definition a student aged 10-14 can understand"}`;
       const res = await callClaude(sys, `Phonetic pronunciation and simple definition for the word "${word}" in ${lang}.`);
-      const m = res.match(/\{[\s\S]*\}/); const data = JSON.parse(m?m[0]:res);
-      document.getElementById('pop-phonetic').textContent = data.phonetic||'';
-      document.getElementById('pop-def').textContent = data.definition||'';
+      const m = res.match(/\{[\s\S]*\}/); const data = JSON.parse(m ? m[0] : res);
+      document.getElementById('pop-phonetic').textContent = data.phonetic || '';
+      document.getElementById('pop-def').textContent = data.definition || '';
     } catch {
-      document.getElementById('pop-phonetic').textContent='(unavailable)';
-      document.getElementById('pop-def').textContent='Could not load definition.';
+      document.getElementById('pop-phonetic').textContent = '(unavailable)';
+      document.getElementById('pop-def').textContent = 'Could not load definition.';
     }
   }
 
-  function closePopover() { document.getElementById('word-popover').style.display='none'; currentWordEl=null; }
+  function closePopover() { document.getElementById('word-popover').style.display = 'none'; currentWordEl = null; }
   function speakWord() { speak(document.getElementById('pop-word').textContent, lastTargetLang, 0.8); }
 
   document.addEventListener('click', (e) => {
@@ -713,95 +695,87 @@ ALWAYS respond with ONLY valid JSON:
   function readAloud() {
     if (!lastTranslation) return;
     stopReading();
-    const langCode = langCodeMap[lastTargetLang]||'en-US';
+    const langCode = langCodeMap[lastTargetLang] || 'en-US';
     const words = document.querySelectorAll('.clickable-word');
     let i = 0;
     function speakNext() {
-      if (i>=words.length) {
-        document.getElementById('read-btn').style.display='inline-flex';
-        document.getElementById('stop-btn').style.display='none';
-        words.forEach(w=>w.classList.remove('highlight-read'));
-        return;
-      }
-      words.forEach(w=>w.classList.remove('highlight-read'));
+      if (i >= words.length) { document.getElementById('read-btn').style.display = 'inline-flex'; document.getElementById('stop-btn').style.display = 'none'; words.forEach(w => w.classList.remove('highlight-read')); return; }
+      words.forEach(w => w.classList.remove('highlight-read'));
       words[i].classList.add('highlight-read');
-      words[i].scrollIntoView({behavior:'smooth',block:'nearest'});
+      words[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       const utt = new SpeechSynthesisUtterance(words[i].textContent);
-      utt.lang=langCode; utt.rate=readSpeed;
-      utt.onend=()=>{i++;speakNext();};
-      currentUtterance=utt;
+      utt.lang = langCode; utt.rate = readSpeed;
+      utt.onend = () => { i++; speakNext(); };
+      currentUtterance = utt;
       window.speechSynthesis.speak(utt);
     }
-    document.getElementById('read-btn').style.display='none';
-    document.getElementById('stop-btn').style.display='inline-flex';
+    document.getElementById('read-btn').style.display = 'none';
+    document.getElementById('stop-btn').style.display = 'inline-flex';
     speakNext();
   }
 
   function stopReading() {
-    window.speechSynthesis.cancel(); currentUtterance=null;
-    document.querySelectorAll('.clickable-word').forEach(w=>w.classList.remove('highlight-read'));
-    document.getElementById('read-btn').style.display='inline-flex';
-    document.getElementById('stop-btn').style.display='none';
+    window.speechSynthesis.cancel(); currentUtterance = null;
+    document.querySelectorAll('.clickable-word').forEach(w => w.classList.remove('highlight-read'));
+    document.getElementById('read-btn').style.display = 'inline-flex';
+    document.getElementById('stop-btn').style.display = 'none';
   }
 
-  function speak(text,lang,rate=1) {
+  function speak(text, lang, rate = 1) {
     window.speechSynthesis.cancel();
-    const utt=new SpeechSynthesisUtterance(text);
-    utt.lang=langCodeMap[lang]||'en-US'; utt.rate=rate;
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = langCodeMap[lang] || 'en-US'; utt.rate = rate;
     window.speechSynthesis.speak(utt);
   }
 
-  function setSpeed(s,btn) {
-    readSpeed=s;
-    document.querySelectorAll('.speed-btn').forEach(b=>b.classList.remove('active'));
+  function setSpeed(s, btn) {
+    readSpeed = s;
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
   }
 
-  function copyTranslation() {
-    if (!lastTranslation) return;
-    navigator.clipboard.writeText(lastTranslation).then(()=>showToast('✅ Translation copied!'));
-  }
+  function copyTranslation() { if (!lastTranslation) return; navigator.clipboard.writeText(lastTranslation).then(() => showToast('✅ Translation copied!')); }
 
   function saveTranslation() {
     if (!lastTranslation) return;
-    const notes=(lastCultural.cultural_notes||[]).map(n=>`• ${n.term}: ${n.explanation}`).join('\n');
-    const content=`CULTUREREADS — TRANSLATION\n${'─'.repeat(40)}\nFrom: ${document.getElementById('source-lang').value} → ${lastTargetLang}\nCreated by Aria Kottaka Raj\n\n${'─'.repeat(40)}\nTRANSLATION:\n${lastTranslation}\n\n${'─'.repeat(40)}\nCULTURAL NOTES:\n${notes||'No special cultural notes.'}\n\n${'─'.repeat(40)}\nculturereads.org`;
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));
-    a.download=`CultureReads-${lastTargetLang}.txt`;
+    const notes = (lastCultural.cultural_notes || []).map(n => `• ${n.term}: ${n.explanation}`).join('\n');
+    const content = `CULTUREREADS — TRANSLATION\n${'─'.repeat(40)}\nFrom: ${document.getElementById('source-lang').value} → ${lastTargetLang}\nCreated by Aria Kottaka Raj\n\n${'─'.repeat(40)}\nTRANSLATION:\n${lastTranslation}\n\n${'─'.repeat(40)}\nCULTURAL NOTES:\n${notes || 'No special cultural notes.'}\n\n${'─'.repeat(40)}\nculturereads.org`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+    a.download = `CultureReads-${lastTargetLang}.txt`;
     a.click();
   }
 
   function shareTranslation() {
     if (!lastTranslation) return;
-    navigator.clipboard.writeText(`🌍 CultureReads (${lastTargetLang}):\n\n${lastTranslation.substring(0,200)}${lastTranslation.length>200?'...':''}\n\nTranslated by CultureReads — created by Aria Kottaka Raj`).then(()=>showToast('📤 Copied to clipboard!'));
+    navigator.clipboard.writeText(`🌍 CultureReads (${lastTargetLang}):\n\n${lastTranslation.substring(0, 200)}${lastTranslation.length > 200 ? '...' : ''}\n\nTranslated by CultureReads — created by Aria Kottaka Raj`).then(() => showToast('📤 Copied to clipboard!'));
   }
 
   function setLoading(on) {
-    const btn=document.getElementById('translate-btn');
-    btn.disabled=on;
-    btn.textContent=on?'⏳ Checking & translating...':'🌐 Translate & Explain';
-    document.getElementById('spinner').style.display=on?'flex':'none';
+    const btn = document.getElementById('translate-btn');
+    btn.disabled = on;
+    btn.textContent = on ? '⏳ Checking & translating...' : '🌐 Translate & Explain';
+    document.getElementById('spinner').style.display = on ? 'flex' : 'none';
     if (on) {
-      document.getElementById('output-placeholder').style.display='none';
-      document.getElementById('translated-content').style.display='none';
-      document.getElementById('cultural-content').innerHTML='<div class="cultural-placeholder">⏳ Generating cultural notes...</div>';
-      document.getElementById('read-controls').style.display='none';
-      document.getElementById('action-bar').style.display='none';
-      document.getElementById('report-bar').style.display='none';
-      const notesBtn=document.getElementById('translate-notes-btn');
-      if (notesBtn) notesBtn.style.display='none';
+      document.getElementById('output-placeholder').style.display = 'none';
+      document.getElementById('translated-content').style.display = 'none';
+      document.getElementById('cultural-content').innerHTML = '<div class="cultural-placeholder">⏳ Generating cultural notes...</div>';
+      document.getElementById('read-controls').style.display = 'none';
+      document.getElementById('action-bar').style.display = 'none';
+      document.getElementById('report-bar').style.display = 'none';
+      const notesBtn = document.getElementById('translate-notes-btn');
+      if (notesBtn) notesBtn.style.display = 'none';
     }
   }
 
-  function showError(msg) { const el=document.getElementById('error-msg'); el.textContent=msg; el.style.display='block'; }
-  function clearError() { document.getElementById('error-msg').style.display='none'; }
+  function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.style.display = 'block'; }
+  function clearError() { document.getElementById('error-msg').style.display = 'none'; }
 
   function showToast(msg) {
-    const t=document.createElement('div'); t.textContent=msg;
-    Object.assign(t.style,{position:'fixed',bottom:'30px',left:'50%',transform:'translateX(-50%)',background:'var(--ink)',color:'var(--white)',padding:'10px 22px',borderRadius:'50px',fontFamily:'var(--font-head)',fontWeight:'700',fontSize:'0.88rem',zIndex:'9999',boxShadow:'var(--shadow-md)',transition:'opacity 0.3s'});
+    const t = document.createElement('div'); t.textContent = msg;
+    Object.assign(t.style, { position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)', background: 'var(--ink)', color: 'var(--white)', padding: '10px 22px', borderRadius: '50px', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.88rem', zIndex: '9999', boxShadow: 'var(--shadow-md)', transition: 'opacity 0.3s' });
     document.body.appendChild(t);
-    setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400);},2200);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2200);
   }
 
   // ── IMAGE UPLOAD & CAMERA OCR ──────────────────────────────────────────
@@ -810,37 +784,24 @@ ALWAYS respond with ONLY valid JSON:
 
   function handleImageUpload(event) {
     const file = event.target.files[0];
-    event.target.value = ''; // reset so same file can be re-selected
+    event.target.value = '';
     if (!file) return;
-
-    const MAX_SIZE_MB = 5;
-    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      showError(`Image is too large. Please use an image under ${MAX_SIZE_MB}MB.`);
-      return;
-    }
-    const allowedTypes = ['image/jpeg','image/png','image/gif','image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      showError('Unsupported image type. Please use JPG, PNG, GIF, or WebP.');
-      return;
-    }
-
+    if (file.size > 5 * 1024 * 1024) { showError('Image is too large. Please use an image under 5MB.'); return; }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) { showError('Unsupported image type. Please use JPG, PNG, GIF, or WebP.'); return; }
     clearError();
     const reader = new FileReader();
     reader.onload = async (e) => {
       const dataUrl = e.target.result;
       const base64 = dataUrl.split(',')[1];
       const mediaType = file.type;
-
       currentImageBase64 = base64;
       currentImageMediaType = mediaType;
-
-      // Show preview strip
       const strip = document.getElementById('image-preview-strip');
       strip.style.display = 'flex';
       document.getElementById('img-preview-thumb').src = dataUrl;
-      document.getElementById('img-file-name').textContent = file.name.length > 24 ? file.name.substring(0,22)+'…' : file.name;
+      document.getElementById('img-file-name').textContent = file.name.length > 24 ? file.name.substring(0, 22) + '…' : file.name;
       setOcrStatus('reading', '📖 Reading image...');
-
       await extractTextFromImage(base64, mediaType);
     };
     reader.onerror = () => showError('Could not read the image file. Please try again.');
@@ -848,50 +809,16 @@ ALWAYS respond with ONLY valid JSON:
   }
 
   async function extractTextFromImage(base64, mediaType) {
-    if (!apiKey || apiKey === 'PASTE-YOUR-NEW-API-KEY-HERE') {
-      setOcrStatus('error', '⚠️ API key not configured.');
-      return;
-    }
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 2000,
-          messages: [{
-            role: 'user',
-            content: [
-              { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-              { type: 'text', text: 'Please extract all the text visible in this image. Return ONLY the extracted text exactly as it appears, preserving line breaks where natural. Do not add any commentary, explanation, labels, or formatting — just the raw text from the image. If there is no text in the image, reply with exactly: [NO TEXT FOUND]' }
-            ]
-          }]
-        })
-      });
-
-      if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(err.error?.message || 'Could not read image.');
-      }
-      const data = await response.json();
-      const extracted = data.content[0].text.trim();
-
+      const extracted = await callClaudeWithImage(base64, mediaType);
       if (!extracted || extracted === '[NO TEXT FOUND]') {
         setOcrStatus('error', '⚠️ No text found. Try a clearer photo.');
         return;
       }
-
-      // Populate textarea
       const ta = document.getElementById('input-text');
       ta.value = extracted.substring(0, 3000);
       document.getElementById('char-count').textContent = ta.value.length + ' / 3000';
       setOcrStatus('success', '✅ Text extracted! Now select a language and translate.');
-
     } catch(err) {
       setOcrStatus('error', '⚠️ ' + (err.message || 'Could not read image.'));
     }
@@ -906,8 +833,7 @@ ALWAYS respond with ONLY valid JSON:
   }
 
   function clearImage() {
-    currentImageBase64 = null;
-    currentImageMediaType = null;
+    currentImageBase64 = null; currentImageMediaType = null;
     document.getElementById('image-preview-strip').style.display = 'none';
     document.getElementById('img-preview-thumb').src = '';
     document.getElementById('img-file-name').textContent = '—';
@@ -916,8 +842,10 @@ ALWAYS respond with ONLY valid JSON:
   }
   // ── END IMAGE OCR ───────────────────────────────────────────────────────
 
-  // Disable right-click to protect page source
   document.addEventListener('contextmenu', e => e.preventDefault());
 </script>
+</body>
+</html>
+
 </body>
 </html>

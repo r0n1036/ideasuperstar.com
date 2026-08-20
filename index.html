@@ -2,8 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CultureReads — Every language has a story</title>
+<!-- PWA -->
+<meta name="theme-color" content="#1D6A5A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CultureReads">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Translate any text into 30+ languages with cultural context. Created by Aria Kottaka Raj.">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
@@ -40,9 +49,98 @@
   #onboarding-tip .tip-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 1.1rem; line-height: 1; }
   main { max-width: 1160px; margin: 0 auto; padding: 32px 20px 48px; }
   .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-  @media (max-width: 760px) { .workspace { grid-template-columns: 1fr; } nav { padding: 0 16px; } .hero { padding: 36px 16px 32px; } main { padding: 20px 12px 40px; } }
+  /* ── MOBILE STYLES — desktop unchanged above 760px ── */
+  @media (max-width: 760px) {
+    /* Layout */
+    .workspace { grid-template-columns: 1fr; }
+    main { padding: 16px 12px 100px; } /* bottom padding for sticky button */
+
+    /* Nav — hide tagline, just show logo */
+    nav { padding: 0 16px; height: 58px; }
+    .nav-tagline { display: none; }
+
+    /* Hero — compact */
+    .hero { padding: 28px 16px 24px; }
+    .hero-flags { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 10px; }
+    .hero h1 { font-size: 1.7rem; margin-bottom: 8px; }
+    .hero p { font-size: 0.9rem; margin-bottom: 14px; }
+    .word-of-day { font-size: 0.8rem; padding: 6px 14px; }
+    #onboarding-tip { font-size: 0.82rem; padding: 12px 16px; margin: 14px auto 0; }
+
+    /* Cards */
+    .card { padding: 18px 16px; border-radius: var(--radius-md); }
+    .card-title { font-size: 0.82rem; }
+
+    /* Selects and inputs — larger tap targets */
+    select { padding: 12px 12px; font-size: 1rem; min-height: 48px; }
+    textarea { min-height: 160px; font-size: 1rem; padding: 12px 14px; }
+
+    /* Buttons — minimum 48px tap targets */
+    .btn { min-height: 44px; }
+    .btn-primary { padding: 16px 24px; font-size: 1rem; margin-top: 12px; }
+    .btn-sm { padding: 10px 16px; font-size: 0.85rem; min-height: 44px; }
+    .btn-clear { min-height: 36px; }
+
+    /* Image buttons — full width on mobile */
+    .image-input-row { flex-direction: column; gap: 10px; }
+    .image-input-row .btn-sm { width: 100%; min-height: 48px; font-size: 0.9rem; }
+    .image-input-row .btn-camera { background: var(--teal); color: var(--white); font-size: 0.95rem; }
+
+    /* Fun fact and privacy strips */
+    .fun-fact-strip { padding: 12px 16px; gap: 10px; }
+    .fun-fact-strip .ff-icon { font-size: 1.4rem; }
+    .fun-fact-strip .ff-text { font-size: 0.82rem; }
+    .privacy-strip { padding: 10px 14px; font-size: 0.78rem; }
+
+    /* Cultural panel */
+    .cultural-panel { padding: 18px 16px; }
+    .cultural-subtitle { font-size: 0.78rem; }
+    .cultural-content { font-size: 0.9rem; }
+
+    /* Read controls */
+    .read-controls { gap: 6px; }
+    .speed-label { display: none; }
+
+    /* Footer */
+    footer { padding: 24px 16px; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+    footer .footer-meta { font-size: 0.72rem; }
+    .lang-badge { font-size: 0.7rem; padding: 3px 10px; }
+
+    /* Sticky translate button at bottom on mobile */
+    #translate-btn-wrap {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      background: var(--white); border-top: 1.5px solid var(--border);
+      box-shadow: 0 -4px 16px rgba(29,106,90,0.12);
+    }
+    #translate-btn { margin-top: 0; border-radius: var(--radius-md); }
+
+    /* Word popover — bottom sheet on mobile */
+    #word-popover {
+      position: fixed !important; bottom: 0 !important; top: auto !important;
+      left: 0 !important; right: 0 !important; max-width: 100% !important;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 32px rgba(0,0,0,0.15);
+    }
+
+    /* Output area */
+    .output-area { min-height: 160px; }
+    .output-placeholder { padding: 20px 12px; }
+
+    /* Action bar */
+    .action-bar { gap: 8px; }
+    .action-bar .btn-sm { flex: 1; justify-content: center; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 1.45rem; }
+    .card { padding: 14px 12px; }
+  }
   .card { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid var(--border); padding: 24px; box-shadow: var(--shadow-sm); }
   .card-title { font-family: var(--font-head); font-weight: 800; color: var(--teal); margin-bottom: 14px; display: flex; align-items: center; gap: 7px; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.85rem; }
+  .card-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
   .lang-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
   .lang-row label { font-family: var(--font-head); font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
   select { flex: 1; min-width: 140px; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font-head); font-size: 0.88rem; font-weight: 600; color: var(--ink); background: var(--white); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231D6A5A' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
@@ -62,6 +160,8 @@
   .btn-gold:hover { background: #e09510; }
   .btn-coral { background: var(--coral-light); color: var(--coral); padding: 7px 14px; font-size: 0.8rem; }
   .btn-coral:hover { background: var(--coral); color: var(--white); }
+  .btn-clear { background: var(--coral-light); color: var(--coral); padding: 7px 16px; font-size: 0.78rem; border-radius: 50px; border: 1.5px solid #f5c0b0; }
+  .btn-clear:hover { background: var(--coral); color: var(--white); }
   .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 14px; background: var(--teal-pale); border-radius: var(--radius-sm); }
   .toggle-label { font-family: var(--font-head); font-size: 0.85rem; font-weight: 700; color: var(--teal); flex: 1; }
   .toggle { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
@@ -71,8 +171,9 @@
   .toggle input:checked + .toggle-slider { background: var(--teal); }
   .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
   .output-area { min-height: 200px; background: var(--bg); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 16px; font-family: var(--font-body); font-size: 0.96rem; line-height: 1.8; color: var(--ink); position: relative; }
-  .output-placeholder { color: var(--muted); font-style: italic; font-size: 0.9rem; text-align: center; padding: 40px 20px; }
-  .output-placeholder .ph-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+  .output-placeholder { color: var(--muted); font-style: italic; font-size: 0.9rem; text-align: center; padding: 30px 20px; }
+  .output-placeholder .ph-icon { font-size: 2.2rem; margin-bottom: 10px; display: block; }
+
   .clickable-word { cursor: pointer; border-bottom: 1.5px dotted var(--teal-mid); transition: background 0.15s, color 0.15s; border-radius: 3px; padding: 0 2px; }
   .clickable-word:hover { background: var(--teal-light); }
   .clickable-word.highlight-read { background: var(--gold-light); color: var(--ink); }
@@ -119,10 +220,14 @@
   footer a { color: var(--gold); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
   .error-msg { background: var(--coral-light); border: 1.5px solid var(--coral); border-radius: var(--radius-sm); padding: 12px 16px; font-family: var(--font-head); font-size: 0.88rem; font-weight: 600; color: var(--coral); margin-top: 10px; display: none; }
-  @media (max-width: 480px) { .hero h1 { font-size: 1.6rem; } .read-controls { gap: 6px; } .btn-primary { font-size: 0.9rem; } }
-  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; border-top-color: var(--teal); } * { transition: none !important; } }
+  /* char count colours */
+  .char-count-ok { color: var(--muted); }
+  .char-count-warn { color: var(--gold); font-weight: 700; }
+  .char-count-danger { color: var(--coral); font-weight: 700; }
+  /* image upload */
   .image-input-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
   .image-input-row .btn-sm { flex: 1; min-width: 120px; justify-content: center; }
+
   .image-preview-strip { display: none; margin-top: 10px; background: var(--teal-pale); border: 1.5px solid var(--teal-light); border-radius: var(--radius-md); padding: 10px 12px; align-items: center; gap: 10px; flex-wrap: wrap; }
   .image-preview-strip img { max-height: 80px; max-width: 120px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); object-fit: cover; }
   .image-preview-strip .img-info { flex: 1; font-family: var(--font-head); font-size: 0.8rem; }
@@ -133,6 +238,9 @@
   .ocr-spinner { width: 16px; height: 16px; border: 2px solid var(--teal-light); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; display: none; }
   .divider-or { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--font-head); font-size: 0.75rem; font-weight: 700; color: var(--muted); }
   .divider-or::before, .divider-or::after { content:''; flex:1; height:1px; background:var(--border); }
+  .ocr-hint { font-family: var(--font-head); font-size: 0.78rem; color: var(--teal-mid); font-weight: 600; margin-top: 8px; padding: 8px 12px; background: var(--teal-pale); border-radius: var(--radius-sm); display: none; }
+
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; border-top-color: var(--teal); } * { transition: none !important; } }
 </style>
 </head>
 <body>
@@ -180,8 +288,12 @@
 
 <main>
   <div class="workspace">
+    <!-- LEFT CARD -->
     <div class="card">
-      <div class="card-title">📝 Your Text</div>
+      <div class="card-title-row">
+        <div class="card-title" style="margin-bottom:0;">📝 Your Text</div>
+        <button class="btn btn-clear" onclick="clearAll()">🗑 Clear All</button>
+      </div>
       <div class="lang-row">
         <label>From:</label>
         <select id="source-lang">
@@ -266,7 +378,7 @@
         </select>
       </div>
       <textarea id="input-text" placeholder="Paste or type your text here (up to 3,000 characters)...&#10;&#10;Try something like a school notice, a story, a menu, or a news headline." maxlength="3000"></textarea>
-      <div id="char-count" style="font-family:var(--font-head);font-size:0.75rem;color:var(--muted);text-align:right;margin-top:5px;">0 / 3000</div>
+      <div id="char-count" class="char-count-ok" style="font-family:var(--font-head);font-size:0.75rem;text-align:right;margin-top:5px;">0 / 3000</div>
 
       <!-- Image / Camera OCR -->
       <div class="divider-or">or scan an image</div>
@@ -274,7 +386,7 @@
       <input type="file" id="img-camera-input" accept="image/*" capture="environment" style="display:none;" onchange="handleImageUpload(event)">
       <div class="image-input-row">
         <button class="btn btn-sm" onclick="document.getElementById('img-upload-input').click()">📁 Upload Image</button>
-        <button class="btn btn-sm" onclick="document.getElementById('img-camera-input').click()">📷 Take Photo</button>
+        <button class="btn btn-sm btn-camera" onclick="document.getElementById('img-camera-input').click()">📷 Take Photo</button>
       </div>
       <div class="image-preview-strip" id="image-preview-strip">
         <img id="img-preview-thumb" src="" alt="preview" />
@@ -285,6 +397,7 @@
         <div class="ocr-spinner" id="ocr-spinner"></div>
         <button class="btn btn-sm btn-coral" onclick="clearImage()" style="padding:5px 10px;font-size:0.75rem;">✕ Clear</button>
       </div>
+      <div class="ocr-hint" id="ocr-hint">📖 Text extracted from image — it's in its original language. Now select your target language above and click Translate &amp; Explain!</div>
 
       <div class="toggle-row">
         <span class="toggle-label">🎓 Simplify for younger readers (Grades 3–6)</span>
@@ -293,21 +406,25 @@
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <button class="btn btn-primary" onclick="runTranslation()" id="translate-btn">🌐 Translate &amp; Explain</button>
+      <div id="translate-btn-wrap">
+        <button class="btn btn-primary" onclick="runTranslation()" id="translate-btn">🌐 Translate &amp; Explain</button>
+      </div>
       <div class="error-msg" id="error-msg"></div>
     </div>
 
+    <!-- RIGHT CARD -->
     <div class="card">
       <div class="card-title">🌐 Translation</div>
       <div class="output-area" id="output-area">
         <div class="spinner-wrap" id="spinner">
           <div class="spinner"></div>
-          <div class="spinner-text">Translating with care...</div>
+          <div class="spinner-text" id="spinner-text">Translating with care...</div>
         </div>
         <div class="output-placeholder" id="output-placeholder">
           <span class="ph-icon">🌸</span>
           Your translation will appear here.<br>
           <span style="font-size:0.82rem;">Click any word to hear its pronunciation and meaning.</span>
+
         </div>
         <div id="translated-content" style="display:none;"></div>
       </div>
@@ -374,13 +491,11 @@
 </footer>
 
 <script>
-  // ── PROXY URL — API key lives securely in Cloudflare, never in this file ──
   const PROXY_URL = 'https://culturereads-proxy.nishanth-raj-d17.workers.dev';
 
   let readSpeed = 1, currentUtterance = null, currentWordEl = null;
   let lastTranslation = '', lastCultural = '', lastTargetLang = '';
-  let lastRequestTime = 0;
-  let requestCount = 0;
+  let lastRequestTime = 0, requestCount = 0;
   const MAX_REQUESTS_PER_SESSION = 20;
   const COOLDOWN_MS = 5000;
 
@@ -393,6 +508,18 @@
     'Igbo':'ig-NG','Pashto':'ps-AF','Dari':'fa-AF','Hmong':'hmn',
     'Tigrinya':'ti-ER','Chinese/Mandarin':'zh-CN','Russian':'ru-RU',
     'German':'de-DE','Japanese':'ja-JP','Turkish':'tr-TR'
+  };
+
+  // All supported source languages for auto-detection mapping
+  const langNameMap = {
+    'english':'English','spanish':'Spanish','arabic':'Arabic','hindi':'Hindi',
+    'french':'French','portuguese':'Portuguese','mandarin':'Chinese/Mandarin',
+    'chinese':'Chinese/Mandarin','russian':'Russian','german':'German',
+    'japanese':'Japanese','turkish':'Turkish','swahili':'Swahili','tagalog':'Tagalog',
+    'vietnamese':'Vietnamese','urdu':'Urdu','bengali':'Bengali','somali':'Somali',
+    'amharic':'Amharic','hausa':'Hausa','nepali':'Nepali','khmer':'Khmer',
+    'hmong':'Hmong','pashto':'Pashto','punjabi':'Punjabi','tamil':'Tamil',
+    'yoruba':'Yoruba','igbo':'Igbo','zulu':'Zulu','tigrinya':'Tigrinya','dari':'Dari'
   };
 
   const wods = [
@@ -425,21 +552,41 @@
     "Russian uses the Cyrillic alphabet, which was created in the 9th century by two monks."
   ];
 
+  // Loading messages — rotated for variety
+  const loadingMessages = [
+    "Bridging languages with care...",
+    "Asking our multilingual friend...",
+    "Exploring cultures and words...",
+    "Translating with heart...",
+    "Connecting languages...",
+    "Finding the right words...",
+    "Reading between the lines...",
+    "Unlocking this language for you..."
+  ];
+
+
+
   window.addEventListener('load', () => {
-    const w = wods[Math.floor(Math.random()*wods.length)];
+    const w = wods[Math.floor(Math.random() * wods.length)];
     document.getElementById('wod-word').textContent = w.word;
     document.getElementById('wod-lang').textContent = w.lang;
     document.getElementById('wod-word').title = w.meaning;
-    document.getElementById('fun-fact-text').textContent = funFacts[Math.floor(Math.random()*funFacts.length)];
+    document.getElementById('fun-fact-text').textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
     if (localStorage.getItem('cr_seen_tip')) document.getElementById('onboarding-tip').style.display = 'none';
-    else localStorage.setItem('cr_seen_tip','1');
+    else localStorage.setItem('cr_seen_tip', '1');
   });
 
+  // Character count with colour feedback
   document.getElementById('input-text').addEventListener('input', function() {
-    document.getElementById('char-count').textContent = this.value.length + ' / 3000';
+    const len = this.value.length;
+    const el = document.getElementById('char-count');
+    el.textContent = len + ' / 3000';
+    el.className = len >= 2900 ? 'char-count-danger' : len >= 2500 ? 'char-count-warn' : 'char-count-ok';
   });
 
-  // ── SINGLE callClaude function — all requests go through Cloudflare proxy ──
+
+
+  // ── PROXY CALLS ────────────────────────────────────────────────────────
   async function callClaude(systemPrompt, userPrompt) {
     const response = await fetch(PROXY_URL, {
       method: 'POST',
@@ -459,7 +606,6 @@
     return data.content[0].text;
   }
 
-  // ── callClaudeWithImage — for OCR image requests through proxy ──
   async function callClaudeWithImage(base64, mediaType) {
     const response = await fetch(PROXY_URL, {
       method: 'POST',
@@ -471,7 +617,7 @@
           role: 'user',
           content: [
             { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
-            { type: 'text', text: 'Please extract all the text visible in this image. Return ONLY the extracted text exactly as it appears, preserving line breaks where natural. Do not add any commentary, explanation, labels, or formatting — just the raw text from the image. If there is no text in the image, reply with exactly: [NO TEXT FOUND]' }
+            { type: 'text', text: 'Please extract all the text visible in this image. Then detect what language the text is written in. Return ONLY valid JSON in this format: {"text": "the extracted text here", "language": "English"} — where language is the name of the detected language in English. If no text is found, return {"text": "", "language": ""}.' }
           ]
         }]
       })
@@ -481,18 +627,16 @@
       throw new Error(err.error?.message || 'Could not read image.');
     }
     const data = await response.json();
-    return data.content[0].text.trim();
+    const raw = data.content[0].text.trim();
+    const m = raw.match(/\{[\s\S]*\}/);
+    return JSON.parse(m ? m[0] : raw);
   }
+  // ── END PROXY CALLS ────────────────────────────────────────────────────
 
   async function checkContentSafety(text) {
     const sys = `You are a content safety moderator for CultureReads, an educational website for students aged 8-14. Review the submitted text and determine if it is safe and appropriate for this age group.
-
 Flag content as UNSAFE if it contains: profanity or swear words, sexual content or innuendo, graphic violence or gore, hate speech, discrimination, bullying, drug or alcohol references, or any other content inappropriate for students under 14.
-
-Respond ONLY with valid JSON in this exact format:
-{"safe": true, "reason": ""}
-or
-{"safe": false, "reason": "brief description of why it is inappropriate"}`;
+Respond ONLY with valid JSON: {"safe": true, "reason": ""} or {"safe": false, "reason": "brief description"}`;
     const raw = await callClaude(sys, `Please review this text for age-appropriateness:\n\n"${text}"`);
     const m = raw.match(/\{[\s\S]*\}/);
     return JSON.parse(m ? m[0] : raw);
@@ -504,7 +648,7 @@ or
     const targetLang = document.getElementById('target-lang').value;
     const simplify = document.getElementById('simplify-toggle').checked;
 
-    if (!text) { showError('Please paste or type some text first.'); return; }
+    if (!text) { showError('Please paste, type, or scan some text first.'); return; }
     if (!targetLang) { showError('Please select a language to translate into.'); return; }
 
     const now = Date.now();
@@ -518,7 +662,11 @@ or
       return;
     }
 
-    clearError(); setLoading(true);
+    clearError();
+
+    // ── FIX 2: Clear old translation immediately ──
+    clearTranslationOutput();
+    setLoading(true);
 
     try {
       const safety = await checkContentSafety(text);
@@ -529,7 +677,6 @@ or
       }
 
       const systemPrompt = `You are CultureReads — a warm, knowledgeable multilingual cultural guide created for students aged 8-14, designed by Aria Kottaka Raj, passionate about inclusion and belonging.
-
 Your rules:
 1. Provide context-aware (not word-for-word) translations that feel natural in the target language.
 2. Identify and explain idioms, culturally specific terms, and untranslatable phrases.
@@ -537,7 +684,6 @@ Your rules:
 4. Be especially thoughtful about underrepresented languages.
 5. NEVER translate or engage with content that is inappropriate for students under 14. If such content appears, return {"error": "inappropriate_content"}.
 ${simplify ? '6. IMPORTANT: Simplify for younger readers (Grades 3-6). Use simple words and short sentences.' : ''}
-
 ALWAYS respond with ONLY valid JSON:
 {"translation":"full translated text","cultural_notes":[{"term":"phrase","icon":"emoji","explanation":"student-friendly explanation"}],"pronunciation_tip":"brief tip about pronouncing this language","no_notes_message":"friendly message if no notes needed"}`;
 
@@ -558,11 +704,44 @@ ALWAYS respond with ONLY valid JSON:
       lastRequestTime = Date.now();
       requestCount++;
 
+      // ── FIX 3: Auto-clear image after successful translation ──
+      clearImage();
+
       renderTranslation(result.translation, targetLang);
       renderCultural(result);
       setLoading(false);
 
     } catch(err) { setLoading(false); showError(err.message || 'Something went wrong. Please try again.'); }
+  }
+
+  // ── FIX 2 helper: wipe translation area cleanly ──
+  function clearTranslationOutput() {
+    stopReading();
+    document.getElementById('translated-content').innerHTML = '';
+    document.getElementById('translated-content').style.display = 'none';
+    document.getElementById('output-placeholder').style.display = 'block';
+    document.getElementById('read-controls').style.display = 'none';
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('report-bar').style.display = 'none';
+    document.getElementById('cultural-content').innerHTML = '<div class="cultural-placeholder">✨ Cultural notes will appear here after you translate.</div>';
+    const notesBtn = document.getElementById('translate-notes-btn');
+    if (notesBtn) notesBtn.style.display = 'none';
+    lastTranslation = ''; lastCultural = ''; lastTargetLang = '';
+  }
+
+  // ── FIX 4: Clear All button ──
+  function clearAll() {
+    document.getElementById('input-text').value = '';
+    document.getElementById('char-count').textContent = '0 / 3000';
+    document.getElementById('char-count').className = 'char-count-ok';
+    document.getElementById('target-lang').value = '';
+    document.getElementById('target-lang').classList.add('unselected');
+    document.getElementById('simplify-toggle').checked = false;
+    document.getElementById('ocr-hint').style.display = 'none';
+    clearImage();
+    clearTranslationOutput();
+    clearError();
+    showToast('🗑 All cleared — ready for a fresh start!');
   }
 
   function renderTranslation(text, targetLang) {
@@ -614,8 +793,7 @@ ALWAYS respond with ONLY valid JSON:
     const noteItems = cc.querySelectorAll('.note-item .note-text');
     if (!noteItems.length) return;
     const originalHTML = cc.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = '⏳ Translating notes...';
+    btn.disabled = true; btn.innerHTML = '⏳ Translating notes...';
     const noteTexts = [];
     noteItems.forEach(el => noteTexts.push(el.innerText));
     const combined = noteTexts.map((t, i) => `${i+1}. ${t}`).join('\n');
@@ -637,16 +815,9 @@ ALWAYS respond with ONLY valid JSON:
       btn.innerHTML = '✅ Notes translated to ' + targetLang;
       btn.disabled = false;
       const resetBtn = document.createElement('button');
-      resetBtn.id = 'notes-reset-btn';
-      resetBtn.className = 'btn btn-sm';
-      resetBtn.style.marginLeft = '8px';
-      resetBtn.textContent = '↩ Show in English';
-      resetBtn.onclick = () => {
-        cc.innerHTML = originalHTML;
-        btn.innerHTML = '🌐 Translate notes to ' + targetLang;
-        btn.disabled = false;
-        resetBtn.remove();
-      };
+      resetBtn.id = 'notes-reset-btn'; resetBtn.className = 'btn btn-sm';
+      resetBtn.style.marginLeft = '8px'; resetBtn.textContent = '↩ Show in English';
+      resetBtn.onclick = () => { cc.innerHTML = originalHTML; btn.innerHTML = '🌐 Translate notes to ' + targetLang; btn.disabled = false; resetBtn.remove(); };
       btn.parentElement.appendChild(resetBtn);
     } catch(err) {
       btn.innerHTML = '🌐 Translate notes to ' + targetLang;
@@ -717,8 +888,9 @@ ALWAYS respond with ONLY valid JSON:
   function stopReading() {
     window.speechSynthesis.cancel(); currentUtterance = null;
     document.querySelectorAll('.clickable-word').forEach(w => w.classList.remove('highlight-read'));
-    document.getElementById('read-btn').style.display = 'inline-flex';
-    document.getElementById('stop-btn').style.display = 'none';
+    const rb = document.getElementById('read-btn'); const sb = document.getElementById('stop-btn');
+    if (rb) rb.style.display = 'inline-flex';
+    if (sb) sb.style.display = 'none';
   }
 
   function speak(text, lang, rate = 1) {
@@ -755,6 +927,10 @@ ALWAYS respond with ONLY valid JSON:
     const btn = document.getElementById('translate-btn');
     btn.disabled = on;
     btn.textContent = on ? '⏳ Checking & translating...' : '🌐 Translate & Explain';
+    // Rotate loading message
+    if (on) {
+      document.getElementById('spinner-text').textContent = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+    }
     document.getElementById('spinner').style.display = on ? 'flex' : 'none';
     if (on) {
       document.getElementById('output-placeholder').style.display = 'none';
@@ -771,16 +947,15 @@ ALWAYS respond with ONLY valid JSON:
   function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.style.display = 'block'; }
   function clearError() { document.getElementById('error-msg').style.display = 'none'; }
 
-  function showToast(msg) {
+  function showToast(msg, duration = 3000) {
     const t = document.createElement('div'); t.textContent = msg;
     Object.assign(t.style, { position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)', background: 'var(--ink)', color: 'var(--white)', padding: '10px 22px', borderRadius: '50px', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.88rem', zIndex: '9999', boxShadow: 'var(--shadow-md)', transition: 'opacity 0.3s' });
     document.body.appendChild(t);
-    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2200);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, duration);
   }
 
   // ── IMAGE UPLOAD & CAMERA OCR ──────────────────────────────────────────
-  let currentImageBase64 = null;
-  let currentImageMediaType = null;
+  let currentImageBase64 = null, currentImageMediaType = null;
 
   function handleImageUpload(event) {
     const file = event.target.files[0];
@@ -795,12 +970,12 @@ ALWAYS respond with ONLY valid JSON:
       const dataUrl = e.target.result;
       const base64 = dataUrl.split(',')[1];
       const mediaType = file.type;
-      currentImageBase64 = base64;
-      currentImageMediaType = mediaType;
+      currentImageBase64 = base64; currentImageMediaType = mediaType;
       const strip = document.getElementById('image-preview-strip');
       strip.style.display = 'flex';
       document.getElementById('img-preview-thumb').src = dataUrl;
       document.getElementById('img-file-name').textContent = file.name.length > 24 ? file.name.substring(0, 22) + '…' : file.name;
+      document.getElementById('ocr-hint').style.display = 'none';
       setOcrStatus('reading', '📖 Reading image...');
       await extractTextFromImage(base64, mediaType);
     };
@@ -810,24 +985,45 @@ ALWAYS respond with ONLY valid JSON:
 
   async function extractTextFromImage(base64, mediaType) {
     try {
-      const extracted = await callClaudeWithImage(base64, mediaType);
-      if (!extracted || extracted === '[NO TEXT FOUND]') {
+      // ── FIX 6: auto-detect language from image ──
+      const result = await callClaudeWithImage(base64, mediaType);
+
+      if (!result.text || result.text.trim() === '') {
         setOcrStatus('error', '⚠️ No text found. Try a clearer photo.');
         return;
       }
+
       const ta = document.getElementById('input-text');
-      ta.value = extracted.substring(0, 3000);
-      document.getElementById('char-count').textContent = ta.value.length + ' / 3000';
-      setOcrStatus('success', '✅ Text extracted! Now select a language and translate.');
+      ta.value = result.text.substring(0, 3000);
+      const len = ta.value.length;
+      const cc = document.getElementById('char-count');
+      cc.textContent = len + ' / 3000';
+      cc.className = len >= 2900 ? 'char-count-danger' : len >= 2500 ? 'char-count-warn' : 'char-count-ok';
+
+      // Auto-set source language if detected
+      let detectedLabel = '';
+      if (result.language) {
+        const key = result.language.toLowerCase();
+        const matched = langNameMap[key];
+        if (matched) {
+          document.getElementById('source-lang').value = matched;
+          detectedLabel = ` (detected: ${result.language})`;
+        }
+      }
+
+      setOcrStatus('success', `✅ Text extracted${detectedLabel} — select your target language and translate!`);
+
+      // ── FIX 1: Show clear guidance hint ──
+      document.getElementById('ocr-hint').style.display = 'block';
+
     } catch(err) {
       setOcrStatus('error', '⚠️ ' + (err.message || 'Could not read image.'));
     }
   }
 
   function setOcrStatus(type, msg) {
-    const spinner = document.getElementById('ocr-spinner');
+    document.getElementById('ocr-spinner').style.display = type === 'reading' ? 'block' : 'none';
     const status = document.getElementById('img-status');
-    spinner.style.display = type === 'reading' ? 'block' : 'none';
     status.textContent = msg;
     status.className = 'img-status' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
   }
@@ -839,10 +1035,20 @@ ALWAYS respond with ONLY valid JSON:
     document.getElementById('img-file-name').textContent = '—';
     document.getElementById('img-status').textContent = '';
     document.getElementById('ocr-spinner').style.display = 'none';
+    document.getElementById('ocr-hint').style.display = 'none';
   }
   // ── END IMAGE OCR ───────────────────────────────────────────────────────
 
   document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // ── PWA SERVICE WORKER ─────────────────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('CultureReads PWA ready'))
+        .catch(err => console.log('SW not loaded:', err));
+    });
+  }
 </script>
 </body>
 </html>

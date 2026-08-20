@@ -203,6 +203,11 @@
   .footer-links a:hover { color: var(--gold); }
   .footer-copy { color: rgba(255,255,255,0.3); font-size: 0.78rem; }
 
+  /* ── GOOGLE FORM EMBED ── */
+  .gform-wrap { max-width: 680px; margin: 0 auto; }
+  .gform-wrap iframe { width: 100%; min-height: 900px; border-radius: var(--radius-xl); border: 1.5px solid rgba(255,255,255,0.12); display: block; background: rgba(255,255,255,0.05); }
+  @media (max-width: 700px) { .gform-wrap iframe { min-height: 1050px; border-radius: var(--radius-lg); } }
+
   /* ── MOBILE ── */
   @media (max-width: 768px) {
     .hero-stat-num { font-size: 1.6rem; }
@@ -435,73 +440,20 @@
     <h2 class="section-title">Ready to get started?</h2>
     <p class="signup-intro">Choose a program below and fill in your details. Aria will be in touch within 2–3 days. All sessions are free, virtual, and safe.</p>
 
-    <div class="signup-cards">
-      <div class="signup-card" onclick="selectProgram('buddy', this)">
-        <span class="signup-card-icon">🤝</span>
-        <div class="signup-card-name">English Buddy</div>
-        <div class="signup-card-desc">Weekly 1-on-1 conversation sessions</div>
-      </div>
-      <div class="signup-card" onclick="selectProgram('homework', this)">
-        <span class="signup-card-icon">📝</span>
-        <div class="signup-card-name">Homework Help</div>
-        <div class="signup-card-desc">Saturday morning drop-in sessions</div>
-      </div>
-      <div class="signup-card" onclick="selectProgram('workshop', this)">
-        <span class="signup-card-icon">🌐</span>
-        <div class="signup-card-name">Parent Workshop</div>
-        <div class="signup-card-desc">Monthly CultureReads translation workshop</div>
-      </div>
-    </div>
-
-    <div class="form-wrap">
-      <div id="signup-form">
-        <div class="form-row">
-          <div class="form-group">
-            <label>Student's First Name *</label>
-            <input type="text" id="f-first" placeholder="e.g. Amara" required />
-          </div>
-          <div class="form-group">
-            <label>Student's Age *</label>
-            <input type="number" id="f-age" placeholder="e.g. 10" min="8" max="14" />
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Parent / Guardian Name *</label>
-            <input type="text" id="f-parent" placeholder="e.g. Fatima Hassan" required />
-          </div>
-          <div class="form-group">
-            <label>Email Address *</label>
-            <input type="email" id="f-email" placeholder="e.g. fatima@email.com" required />
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Home Language(s)</label>
-          <input type="text" id="f-language" placeholder="e.g. Somali, Arabic, Spanish..." />
-        </div>
-        <div class="form-group">
-          <label>Program of Interest *</label>
-          <select id="f-program">
-            <option value="" disabled selected>— Select a program —</option>
-            <option value="English Buddy Program">🤝 English Buddy Program</option>
-            <option value="Homework Help Hours">📝 Homework Help Hours</option>
-            <option value="Parent Translation Workshop">🌐 Parent Translation Workshop</option>
-            <option value="Multiple programs">✨ More than one program</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Tell Aria a little about yourself (optional)</label>
-          <textarea id="f-message" placeholder="e.g. What country did you come from? What subjects do you find hard? What are your hopes for learning English?"></textarea>
-        </div>
-        <button class="form-submit" onclick="submitForm()">🌟 Send My Sign-Up to Aria</button>
-        <p class="form-privacy">🔒 Your information is kept private and never shared. Aria's mom will review every sign-up personally before getting in touch.</p>
-      </div>
-
-      <div class="form-success" id="signup-success">
-        <span class="fs-icon">🎉</span>
-        <h3>You're signed up!</h3>
-        <p>Thank you! Aria will be in touch within 2–3 days with your session details. We can't wait to meet you!</p>
-      </div>
+    <!-- Google Form Embed -->
+    <div class="gform-wrap">
+      <iframe
+        src="https://forms.gle/CxqNfSDBpNrQ49Ux7?embedded=true"
+        width="100%"
+        height="900"
+        frameborder="0"
+        marginheight="0"
+        marginwidth="0"
+        title="I.D.E.A Superstar Community Program Sign-Up"
+        style="border-radius:var(--radius-xl);overflow:hidden;">
+        Loading form...
+      </iframe>
+      <p class="form-privacy">🔒 Your information is kept private and never shared with third parties. Aria's mom will review every sign-up personally before getting in touch.</p>
     </div>
   </div>
 </section>

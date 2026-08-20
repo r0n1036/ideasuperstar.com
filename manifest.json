@@ -1,10 +1,10 @@
 {
-  "name": "CultureReads",
-  "short_name": "CultureReads",
-  "description": "Translate any text into 30+ languages with cultural context. Created by Aria Kottaka Raj.",
+  "name": "I.D.E.A Superstar",
+  "short_name": "I.D.E.A",
+  "description": "Inclusion. Diversity. Equity. Awareness. A platform by Aria Kottaka Raj.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F7FBF9",
+  "background_color": "#FDFCF8",
   "theme_color": "#1D6A5A",
   "orientation": "portrait-primary",
   "icons": [

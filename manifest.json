@@ -1,0 +1,24 @@
+{
+  "name": "CultureReads",
+  "short_name": "CultureReads",
+  "description": "Translate any text into 30+ languages with cultural context. Created by Aria Kottaka Raj.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7FBF9",
+  "theme_color": "#1D6A5A",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

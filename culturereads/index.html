@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>CultureReads — Every language has a story</title>
+<!-- PWA -->
+<meta name="theme-color" content="#1D6A5A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CultureReads">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Translate any text into 30+ languages with cultural context. Created by Aria Kottaka Raj.">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D6A5A; --teal-mid: #2E9B7E; --teal-light: #E1F5EE; --teal-pale: #F0FAF6;
+    --gold: #F5A623; --gold-light: #FEF3D7; --coral: #E05C3A; --coral-light: #FDECEA;
+    --ink: #1A2E28; --body-text: #3D4F4A; --muted: #718780; --border: #D4E8E1;
+    --bg: #F7FBF9; --white: #FFFFFF; --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px;
+    --shadow-sm: 0 1px 4px rgba(29,106,90,0.08); --shadow-md: 0 4px 16px rgba(29,106,90,0.12);
+    --shadow-lg: 0 8px 32px rgba(29,106,90,0.16); --font-head: 'Nunito', sans-serif; --font-body: 'Lora', serif;
+  }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--body-text); min-height: 100vh; line-height: 1.65; }
+  nav { background: var(--white); border-bottom: 2px solid var(--teal-light); padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 68px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-img { height: 44px; width: auto; display: block; }
+  .logo-text { font-family: var(--font-head); font-size: 1.45rem; font-weight: 900; color: var(--teal); letter-spacing: -0.5px; }
+  .logo-text span { color: var(--gold); }
+  .nav-tagline { font-family: var(--font-head); font-size: 0.78rem; color: var(--muted); text-align: right; line-height: 1.3; }
+  .nav-tagline strong { color: var(--teal); font-weight: 700; font-size: 0.8rem; }
+
+  .hero { background: linear-gradient(135deg, var(--teal) 0%, #2E9B7E 60%, #48C9A0 100%); color: var(--white); padding: 52px 32px 44px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+  .hero::after { content: ''; position: absolute; bottom: -60px; left: -30px; width: 180px; height: 180px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+  .hero-flags { font-size: 1.6rem; letter-spacing: 4px; margin-bottom: 14px; opacity: 0.9; }
+  .hero h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 900; line-height: 1.15; margin-bottom: 12px; letter-spacing: -0.5px; }
+  .hero h1 em { font-style: normal; color: var(--gold); }
+  .hero p { font-family: var(--font-head); font-size: 1.05rem; opacity: 0.9; max-width: 540px; margin: 0 auto 20px; font-weight: 600; }
+  .word-of-day { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 7px 18px; font-family: var(--font-head); font-size: 0.88rem; font-weight: 700; backdrop-filter: blur(4px); }
+  .word-of-day .wod-label { opacity: 0.75; font-weight: 600; }
+  .word-of-day .wod-word { color: var(--gold); }
+  #onboarding-tip { background: var(--ink); color: var(--white); border-radius: var(--radius-md); padding: 14px 20px; max-width: 420px; margin: 20px auto 0; font-family: var(--font-head); font-size: 0.9rem; font-weight: 600; display: flex; align-items: flex-start; gap: 10px; position: relative; }
+  #onboarding-tip .tip-emoji { font-size: 1.3rem; flex-shrink: 0; }
+  #onboarding-tip .tip-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 1.1rem; line-height: 1; }
+  main { max-width: 1160px; margin: 0 auto; padding: 32px 20px 48px; }
+  .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  /* ── MOBILE STYLES — desktop unchanged above 760px ── */
+  @media (max-width: 760px) {
+    /* Layout */
+    .workspace { grid-template-columns: 1fr; }
+    main { padding: 16px 12px 100px; } /* bottom padding for sticky button */
+
+    /* Nav — hide tagline, just show logo */
+    nav { padding: 0 16px; height: 58px; }
+    .nav-tagline { display: none; }
+
+    /* Hero — compact */
+    .hero { padding: 28px 16px 24px; }
+    .hero-flags { font-size: 1.2rem; letter-spacing: 2px; margin-bottom: 10px; }
+    .hero h1 { font-size: 1.7rem; margin-bottom: 8px; }
+    .hero p { font-size: 0.9rem; margin-bottom: 14px; }
+    .word-of-day { font-size: 0.8rem; padding: 6px 14px; }
+    #onboarding-tip { font-size: 0.82rem; padding: 12px 16px; margin: 14px auto 0; }
+
+    /* Cards */
+    .card { padding: 18px 16px; border-radius: var(--radius-md); }
+    .card-title { font-size: 0.82rem; }
+
+    /* Selects and inputs — larger tap targets */
+    select { padding: 12px 12px; font-size: 1rem; min-height: 48px; }
+    textarea { min-height: 160px; font-size: 1rem; padding: 12px 14px; }
+
+    /* Buttons — minimum 48px tap targets */
+    .btn { min-height: 44px; }
+    .btn-primary { padding: 16px 24px; font-size: 1rem; margin-top: 12px; }
+    .btn-sm { padding: 10px 16px; font-size: 0.85rem; min-height: 44px; }
+    .btn-clear { min-height: 36px; }
+
+    /* Image buttons — full width on mobile */
+    .image-input-row { flex-direction: column; gap: 10px; }
+    .image-input-row .btn-sm { width: 100%; min-height: 48px; font-size: 0.9rem; }
+    .image-input-row .btn-camera { background: var(--teal); color: var(--white); font-size: 0.95rem; }
+
+    /* Fun fact and privacy strips */
+    .fun-fact-strip { padding: 12px 16px; gap: 10px; }
+    .fun-fact-strip .ff-icon { font-size: 1.4rem; }
+    .fun-fact-strip .ff-text { font-size: 0.82rem; }
+    .privacy-strip { padding: 10px 14px; font-size: 0.78rem; }
+
+    /* Cultural panel */
+    .cultural-panel { padding: 18px 16px; }
+    .cultural-subtitle { font-size: 0.78rem; }
+    .cultural-content { font-size: 0.9rem; }
+
+    /* Read controls */
+    .read-controls { gap: 6px; }
+    .speed-label { display: none; }
+
+    /* Footer */
+    footer { padding: 24px 16px; padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+    footer .footer-meta { font-size: 0.72rem; }
+    .lang-badge { font-size: 0.7rem; padding: 3px 10px; }
+
+    /* Sticky translate button at bottom on mobile */
+    #translate-btn-wrap {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+      padding: 12px 16px; padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      background: var(--white); border-top: 1.5px solid var(--border);
+      box-shadow: 0 -4px 16px rgba(29,106,90,0.12);
+    }
+    #translate-btn { margin-top: 0; border-radius: var(--radius-md); }
+
+    /* Word popover — bottom sheet on mobile */
+    #word-popover {
+      position: fixed !important; bottom: 0 !important; top: auto !important;
+      left: 0 !important; right: 0 !important; max-width: 100% !important;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 32px rgba(0,0,0,0.15);
+    }
+
+    /* Output area */
+    .output-area { min-height: 160px; }
+    .output-placeholder { padding: 20px 12px; }
+
+    /* Action bar */
+    .action-bar { gap: 8px; }
+    .action-bar .btn-sm { flex: 1; justify-content: center; }
+  }
+
+  /* Very small phones */
+  @media (max-width: 380px) {
+    .hero h1 { font-size: 1.45rem; }
+    .card { padding: 14px 12px; }
+  }
+  .card { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid var(--border); padding: 24px; box-shadow: var(--shadow-sm); }
+  .card-title { font-family: var(--font-head); font-weight: 800; color: var(--teal); margin-bottom: 14px; display: flex; align-items: center; gap: 7px; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.85rem; }
+  .card-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+  .lang-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .lang-row label { font-family: var(--font-head); font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; white-space: nowrap; }
+  select { flex: 1; min-width: 140px; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-family: var(--font-head); font-size: 0.88rem; font-weight: 600; color: var(--ink); background: var(--white); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231D6A5A' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+  select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(29,106,90,0.12); }
+  select.unselected { color: var(--muted); }
+  textarea { width: 100%; min-height: 200px; border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 14px 16px; font-family: var(--font-body); font-size: 0.95rem; color: var(--ink); resize: vertical; line-height: 1.7; background: var(--bg); transition: border-color 0.2s; }
+  textarea:focus { outline: none; border-color: var(--teal); background: var(--white); box-shadow: 0 0 0 3px rgba(29,106,90,0.08); }
+  textarea::placeholder { color: var(--muted); font-style: italic; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 22px; border-radius: 50px; border: none; font-family: var(--font-head); font-weight: 800; font-size: 0.9rem; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s; text-decoration: none; }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-primary { background: var(--teal); color: var(--white); box-shadow: 0 4px 14px rgba(29,106,90,0.3); width: 100%; justify-content: center; font-size: 1rem; padding: 14px 24px; margin-top: 14px; border-radius: var(--radius-md); }
+  .btn-primary:hover:not(:disabled) { box-shadow: 0 6px 20px rgba(29,106,90,0.4); transform: translateY(-1px); }
+  .btn-sm { background: var(--teal-light); color: var(--teal); padding: 7px 14px; font-size: 0.8rem; }
+  .btn-sm:hover { background: var(--teal); color: var(--white); }
+  .btn-gold { background: var(--gold); color: var(--ink); padding: 9px 18px; font-size: 0.88rem; }
+  .btn-gold:hover { background: #e09510; }
+  .btn-coral { background: var(--coral-light); color: var(--coral); padding: 7px 14px; font-size: 0.8rem; }
+  .btn-coral:hover { background: var(--coral); color: var(--white); }
+  .btn-clear { background: var(--coral-light); color: var(--coral); padding: 7px 16px; font-size: 0.78rem; border-radius: 50px; border: 1.5px solid #f5c0b0; }
+  .btn-clear:hover { background: var(--coral); color: var(--white); }
+  .toggle-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px 14px; background: var(--teal-pale); border-radius: var(--radius-sm); }
+  .toggle-label { font-family: var(--font-head); font-size: 0.85rem; font-weight: 700; color: var(--teal); flex: 1; }
+  .toggle { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider { position: absolute; inset: 0; background: var(--border); border-radius: 24px; cursor: pointer; transition: background 0.2s; }
+  .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: var(--white); border-radius: 50%; transition: transform 0.2s; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+  .toggle input:checked + .toggle-slider { background: var(--teal); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+  .output-area { min-height: 200px; background: var(--bg); border: 1.5px dashed var(--border); border-radius: var(--radius-md); padding: 16px; font-family: var(--font-body); font-size: 0.96rem; line-height: 1.8; color: var(--ink); position: relative; }
+  .output-placeholder { color: var(--muted); font-style: italic; font-size: 0.9rem; text-align: center; padding: 30px 20px; }
+  .output-placeholder .ph-icon { font-size: 2.2rem; margin-bottom: 10px; display: block; }
+
+  .clickable-word { cursor: pointer; border-bottom: 1.5px dotted var(--teal-mid); transition: background 0.15s, color 0.15s; border-radius: 3px; padding: 0 2px; }
+  .clickable-word:hover { background: var(--teal-light); }
+  .clickable-word.highlight-read { background: var(--gold-light); color: var(--ink); }
+  .read-controls { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .speed-label { font-family: var(--font-head); font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-left: 4px; }
+  .speed-btns { display: flex; gap: 4px; }
+  .speed-btn { padding: 5px 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--white); font-family: var(--font-head); font-size: 0.75rem; font-weight: 700; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .speed-btn.active, .speed-btn:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+  #word-popover { position: fixed; z-index: 999; background: var(--white); border: 2px solid var(--teal); border-radius: var(--radius-md); padding: 16px 20px; max-width: 300px; box-shadow: var(--shadow-lg); display: none; font-family: var(--font-head); }
+  #word-popover .pop-word { font-size: 1.3rem; font-weight: 900; color: var(--teal); margin-bottom: 6px; }
+  #word-popover .pop-phonetic { font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; font-style: italic; }
+  #word-popover .pop-def { font-size: 0.88rem; color: var(--body-text); line-height: 1.5; margin-bottom: 10px; }
+  #word-popover .pop-actions { display: flex; gap: 6px; }
+  #word-popover .pop-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; }
+  .cultural-panel { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid var(--border); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
+  .cultural-panel .card-title { margin-bottom: 6px; }
+  .cultural-subtitle { font-family: var(--font-head); font-size: 0.82rem; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+  .cultural-content { font-family: var(--font-body); font-size: 0.95rem; line-height: 1.8; color: var(--body-text); }
+  .cultural-content .note-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--teal-light); }
+  .cultural-content .note-item:last-child { border-bottom: none; }
+  .note-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+  .note-text strong { color: var(--teal); font-family: var(--font-head); font-weight: 700; }
+  .cultural-placeholder { color: var(--muted); font-style: italic; font-size: 0.9rem; padding: 20px 0; font-family: var(--font-head); font-weight: 600; text-align: center; }
+  .action-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 12px; }
+  .fun-fact-strip { background: linear-gradient(90deg, var(--gold-light) 0%, var(--teal-pale) 100%); border: 1.5px solid var(--border); border-radius: var(--radius-md); padding: 16px 22px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+  .fun-fact-strip .ff-icon { font-size: 1.8rem; flex-shrink: 0; }
+  .fun-fact-strip .ff-label { font-family: var(--font-head); font-size: 0.72rem; font-weight: 800; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+  .fun-fact-strip .ff-text { font-family: var(--font-head); font-size: 0.9rem; font-weight: 600; color: var(--body-text); }
+  .spinner-wrap { display: none; align-items: center; justify-content: center; gap: 12px; padding: 40px 20px; flex-direction: column; }
+  .spinner { width: 40px; height: 40px; border: 3px solid var(--teal-light); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner-text { font-family: var(--font-head); font-weight: 700; color: var(--teal); font-size: 0.9rem; }
+  .lang-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--teal); color: var(--white); border-radius: 50px; padding: 3px 12px; font-family: var(--font-head); font-weight: 800; font-size: 0.78rem; }
+  .privacy-strip { background: var(--teal-pale); border: 1.5px solid var(--teal-light); border-radius: var(--radius-md); padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 0.82rem; font-weight: 600; color: var(--teal); }
+  .privacy-strip .pr-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .report-bar { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
+  .report-link { font-family: var(--font-head); font-size: 0.75rem; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; text-decoration: underline; }
+  .report-link:hover { color: var(--coral); }
+  footer { background: var(--ink); color: rgba(255,255,255,0.7); text-align: center; padding: 32px 20px; font-family: var(--font-head); font-size: 0.85rem; }
+  footer .footer-logo { font-size: 1.2rem; font-weight: 900; color: var(--white); margin-bottom: 8px; }
+  footer .footer-logo span { color: var(--gold); }
+  footer .footer-mission { max-width: 480px; margin: 0 auto 14px; line-height: 1.6; font-weight: 600; }
+  footer .footer-meta { color: rgba(255,255,255,0.45); font-size: 0.78rem; }
+  footer a { color: var(--gold); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .error-msg { background: var(--coral-light); border: 1.5px solid var(--coral); border-radius: var(--radius-sm); padding: 12px 16px; font-family: var(--font-head); font-size: 0.88rem; font-weight: 600; color: var(--coral); margin-top: 10px; display: none; }
+  /* char count colours */
+  .char-count-ok { color: var(--muted); }
+  .char-count-warn { color: var(--gold); font-weight: 700; }
+  .char-count-danger { color: var(--coral); font-weight: 700; }
+  /* image upload */
+  .image-input-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .image-input-row .btn-sm { flex: 1; min-width: 120px; justify-content: center; }
+
+  .image-preview-strip { display: none; margin-top: 10px; background: var(--teal-pale); border: 1.5px solid var(--teal-light); border-radius: var(--radius-md); padding: 10px 12px; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .image-preview-strip img { max-height: 80px; max-width: 120px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); object-fit: cover; }
+  .image-preview-strip .img-info { flex: 1; font-family: var(--font-head); font-size: 0.8rem; }
+  .image-preview-strip .img-name { font-weight: 700; color: var(--teal); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; }
+  .image-preview-strip .img-status { color: var(--muted); font-size: 0.75rem; }
+  .image-preview-strip .img-status.success { color: var(--teal-mid); font-weight: 700; }
+  .image-preview-strip .img-status.error { color: var(--coral); font-weight: 700; }
+  .ocr-spinner { width: 16px; height: 16px; border: 2px solid var(--teal-light); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; display: none; }
+  .divider-or { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-family: var(--font-head); font-size: 0.75rem; font-weight: 700; color: var(--muted); }
+  .divider-or::before, .divider-or::after { content:''; flex:1; height:1px; background:var(--border); }
+  .ocr-hint { font-family: var(--font-head); font-size: 0.78rem; color: var(--teal-mid); font-weight: 600; margin-top: 8px; padding: 8px 12px; background: var(--teal-pale); border-radius: var(--radius-sm); display: none; }
+
+  @media (prefers-reduced-motion: reduce) { .spinner { animation: none; border-top-color: var(--teal); } * { transition: none !important; } }
+
+  /* ── FLOATING HELP BUTTON ── */
+  #help-fab { position: fixed; bottom: 24px; right: 20px; z-index: 200; width: 48px; height: 48px; border-radius: 50%; background: var(--teal); color: var(--white); font-size: 1.3rem; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 4px 16px rgba(29,106,90,0.35); transition: transform 0.2s, box-shadow 0.2s; border: none; cursor: pointer; }
+  #help-fab:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(29,106,90,0.45); }
+  #help-fab .fab-tooltip { position: absolute; right: 56px; background: var(--ink); color: var(--white); font-family: var(--font-head); font-size: 0.75rem; font-weight: 700; padding: 5px 10px; border-radius: var(--radius-sm); white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  #help-fab:hover .fab-tooltip { opacity: 1; }
+  /* On mobile, push FAB up above the sticky translate button */
+  @media (max-width: 760px) { #help-fab { bottom: 80px; right: 14px; width: 44px; height: 44px; font-size: 1.1rem; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="logo" style="display:flex;align-items:center;gap:10px;">
+    <img class="logo-img" src="data:image/jpeg;base64,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" alt="CultureReads" />
+    <div class="logo-text">Culture<span>Reads</span></div>
+  </a>
+  <div class="nav-tagline">
+    <div>Every language has a story. Let's read it together.</div>
+    <strong><a href="../index.html" style="color:var(--teal);text-decoration:none;">← I.D.E.A Superstar</a></strong>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-flags">🇺🇸 🇪🇸 🇸🇦 🇮🇳 🇰🇭 🇳🇬 🇵🇭 🇪🇹 🇻🇳 🇸🇴</div>
+  <h1>Read it. Hear it.<br><em>Understand it.</em></h1>
+  <p>Paste any text and get instant translation, pronunciation help, and cultural context — in 30+ languages, including languages that don't always get the spotlight.</p>
+  <div class="word-of-day">
+    <span class="wod-label">✨ Word of the Day:</span>
+    <span class="wod-word" id="wod-word">Loading...</span>
+    <span id="wod-lang" style="opacity:0.75;"></span>
+  </div>
+  <div id="onboarding-tip">
+    <span class="tip-emoji">👋</span>
+    <span>Hi! I'm CultureReads. Paste any text below, choose a language, and I'll translate it, explain the culture, and read it aloud — just for you.</span>
+    <button class="tip-close" onclick="this.parentElement.style.display='none'">✕</button>
+  </div>
+</div>
+
+<div style="max-width:1160px;margin:0 auto;padding:20px 20px 0;">
+  <div class="fun-fact-strip">
+    <div class="ff-icon">💡</div>
+    <div>
+      <div class="ff-label">Language Fun Fact</div>
+      <div class="ff-text" id="fun-fact-text">There are over 7,000 languages spoken in the world today — and about half of them are in danger of disappearing.</div>
+    </div>
+  </div>
+  <div class="privacy-strip">
+    <span class="pr-icon">🔒</span>
+    <span>CultureReads does not store, save, or share any text you enter. All translations happen in real time and are never recorded. This is a safe space for learning.</span>
+  </div>
+</div>
+
+<main>
+  <div class="workspace">
+    <!-- LEFT CARD -->
+    <div class="card">
+      <div class="card-title-row">
+        <div class="card-title" style="margin-bottom:0;">📝 Your Text</div>
+        <button class="btn btn-clear" onclick="clearAll()">🗑 Clear All</button>
+      </div>
+      <div class="lang-row">
+        <label>From:</label>
+        <select id="source-lang">
+          <option value="English">English</option>
+          <option value="Spanish">Spanish</option>
+          <option value="Arabic">Arabic</option>
+          <option value="Hindi">Hindi</option>
+          <option value="French">French</option>
+          <option value="Portuguese">Portuguese</option>
+          <option value="Chinese/Mandarin">Chinese / Mandarin</option>
+          <option value="Russian">Russian</option>
+          <option value="German">German</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Turkish">Turkish</option>
+          <option value="Swahili">Swahili</option>
+          <option value="Tagalog">Tagalog</option>
+          <option value="Vietnamese">Vietnamese</option>
+          <option value="Urdu">Urdu</option>
+          <option value="Bengali">Bengali</option>
+          <option value="Somali">Somali</option>
+          <option value="Amharic">Amharic</option>
+          <option value="Hausa">Hausa</option>
+          <option value="Nepali">Nepali</option>
+          <option value="Khmer">Khmer</option>
+          <option value="Hmong">Hmong</option>
+          <option value="Pashto">Pashto</option>
+          <option value="Punjabi">Punjabi</option>
+          <option value="Tamil">Tamil</option>
+          <option value="Yoruba">Yoruba</option>
+          <option value="Igbo">Igbo</option>
+          <option value="Zulu">Zulu</option>
+          <option value="Tigrinya">Tigrinya</option>
+          <option value="Dari">Dari</option>
+        </select>
+      </div>
+      <div class="lang-row">
+        <label>Into:</label>
+        <select id="target-lang" class="unselected" onchange="this.classList.remove('unselected')">
+          <option value="" disabled selected>— Select a language —</option>
+          <optgroup label="🌍 African Languages">
+            <option value="Swahili">Swahili</option>
+            <option value="Hausa">Hausa</option>
+            <option value="Yoruba">Yoruba</option>
+            <option value="Igbo">Igbo</option>
+            <option value="Amharic">Amharic</option>
+            <option value="Somali">Somali</option>
+            <option value="Zulu">Zulu</option>
+            <option value="Tigrinya">Tigrinya</option>
+          </optgroup>
+          <optgroup label="🌏 East Asian Languages">
+            <option value="Chinese/Mandarin">Chinese / Mandarin</option>
+            <option value="Japanese">Japanese</option>
+          </optgroup>
+          <optgroup label="🌏 South Asian Languages">
+            <option value="Hindi">Hindi</option>
+            <option value="Urdu">Urdu</option>
+            <option value="Bengali">Bengali</option>
+            <option value="Nepali">Nepali</option>
+            <option value="Punjabi">Punjabi</option>
+            <option value="Tamil">Tamil</option>
+          </optgroup>
+          <optgroup label="🌏 Southeast Asian Languages">
+            <option value="Tagalog">Tagalog</option>
+            <option value="Vietnamese">Vietnamese</option>
+            <option value="Khmer">Khmer</option>
+            <option value="Hmong">Hmong</option>
+          </optgroup>
+          <optgroup label="🕌 Middle Eastern Languages">
+            <option value="Arabic">Arabic</option>
+            <option value="Pashto">Pashto</option>
+            <option value="Dari">Dari</option>
+            <option value="Turkish">Turkish</option>
+          </optgroup>
+          <optgroup label="🌎 European & American Languages">
+            <option value="Spanish">Spanish</option>
+            <option value="Portuguese">Portuguese</option>
+            <option value="French">French</option>
+            <option value="German">German</option>
+            <option value="Russian">Russian</option>
+            <option value="English">English</option>
+          </optgroup>
+        </select>
+      </div>
+      <textarea id="input-text" placeholder="Paste or type your text here (up to 3,000 characters)...&#10;&#10;Try something like a school notice, a story, a menu, or a news headline." maxlength="3000"></textarea>
+      <div id="char-count" class="char-count-ok" style="font-family:var(--font-head);font-size:0.75rem;text-align:right;margin-top:5px;">0 / 3000</div>
+
+      <!-- Image / Camera OCR -->
+      <div class="divider-or">or scan an image</div>
+      <input type="file" id="img-upload-input" accept="image/*" style="display:none;" onchange="handleImageUpload(event)">
+      <input type="file" id="img-camera-input" accept="image/*" capture="environment" style="display:none;" onchange="handleImageUpload(event)">
+      <div class="image-input-row">
+        <button class="btn btn-sm" onclick="document.getElementById('img-upload-input').click()">📁 Upload Image</button>
+        <button class="btn btn-sm btn-camera" onclick="document.getElementById('img-camera-input').click()">📷 Take Photo</button>
+      </div>
+      <div class="image-preview-strip" id="image-preview-strip">
+        <img id="img-preview-thumb" src="" alt="preview" />
+        <div class="img-info">
+          <div class="img-name" id="img-file-name">—</div>
+          <div class="img-status" id="img-status">Ready to read</div>
+        </div>
+        <div class="ocr-spinner" id="ocr-spinner"></div>
+        <button class="btn btn-sm btn-coral" onclick="clearImage()" style="padding:5px 10px;font-size:0.75rem;">✕ Clear</button>
+      </div>
+      <div class="ocr-hint" id="ocr-hint">📖 Text extracted from image — it's in its original language. Now select your target language above and click Translate &amp; Explain!</div>
+
+      <div class="toggle-row">
+        <span class="toggle-label">🎓 Simplify for younger readers (Grades 3–6)</span>
+        <label class="toggle">
+          <input type="checkbox" id="simplify-toggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div id="translate-btn-wrap">
+        <button class="btn btn-primary" onclick="runTranslation()" id="translate-btn">🌐 Translate &amp; Explain</button>
+      </div>
+      <div class="error-msg" id="error-msg"></div>
+    </div>
+
+    <!-- RIGHT CARD -->
+    <div class="card">
+      <div class="card-title">🌐 Translation</div>
+      <div class="output-area" id="output-area">
+        <div class="spinner-wrap" id="spinner">
+          <div class="spinner"></div>
+          <div class="spinner-text" id="spinner-text">Translating with care...</div>
+        </div>
+        <div class="output-placeholder" id="output-placeholder">
+          <span class="ph-icon">🌸</span>
+          Your translation will appear here.<br>
+          <span style="font-size:0.82rem;">Click any word to hear its pronunciation and meaning.</span>
+
+        </div>
+        <div id="translated-content" style="display:none;"></div>
+      </div>
+      <div class="read-controls" id="read-controls" style="display:none;">
+        <button class="btn btn-gold" onclick="readAloud()" id="read-btn">🔊 Read Aloud</button>
+        <button class="btn btn-sm" onclick="stopReading()" id="stop-btn" style="display:none;">⏹ Stop</button>
+        <span class="speed-label">Speed:</span>
+        <div class="speed-btns">
+          <button class="speed-btn" onclick="setSpeed(0.7, this)">🐢 Slow</button>
+          <button class="speed-btn active" onclick="setSpeed(1, this)">Normal</button>
+          <button class="speed-btn" onclick="setSpeed(1.4, this)">🚀 Fast</button>
+        </div>
+      </div>
+      <div class="action-bar" id="action-bar" style="display:none;">
+        <button class="btn btn-sm" onclick="copyTranslation()">📋 Copy</button>
+        <button class="btn btn-sm" onclick="saveTranslation()">💾 Save</button>
+        <button class="btn btn-coral" onclick="shareTranslation()">📤 Share</button>
+      </div>
+      <div class="report-bar" id="report-bar" style="display:none;">
+        <button class="report-link" onclick="reportContent()">🚩 Report inappropriate content</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cultural-panel">
+    <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <span>🏛️ Cultural Notes</span>
+      <button class="btn btn-sm" id="translate-notes-btn" onclick="translateCulturalNotes()" style="display:none;">
+        🌐 Translate notes to <span id="notes-lang-label">selected language</span>
+      </button>
+    </div>
+    <div class="cultural-subtitle">Context-aware explanations of idioms, cultural references, and phrases that don't translate directly — written for students.</div>
+    <div class="cultural-content" id="cultural-content">
+      <div class="cultural-placeholder">✨ Cultural notes will appear here after you translate.</div>
+    </div>
+  </div>
+</main>
+
+<div id="word-popover">
+  <button class="pop-close" onclick="closePopover()">✕</button>
+  <div class="pop-word" id="pop-word"></div>
+  <div class="pop-phonetic" id="pop-phonetic"></div>
+  <div class="pop-def" id="pop-def"></div>
+  <div class="pop-actions">
+    <button class="btn btn-sm" onclick="speakWord()">🔊 Hear it</button>
+    <button class="btn btn-sm" onclick="closePopover()">Close</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Culture<span>Reads</span></div>
+  <div class="footer-mission">Built with a belief that every student deserves to feel at home in their new language — and that every language carries stories worth understanding.</div>
+  <div style="margin-bottom:10px;">
+    <span class="lang-badge">🌍 30+ Languages</span> &nbsp;
+    <span class="lang-badge">🎓 Age-Appropriate</span> &nbsp;
+    <span class="lang-badge">🔒 Safe &amp; Private</span> &nbsp;
+    <span class="lang-badge">🤖 AI-Powered</span>
+  </div>
+  <div class="footer-meta">
+    Created by <strong style="color:rgba(255,255,255,0.8);">Aria Kottaka Raj</strong> ·
+    Author of <a href="../index.html">I.D.E.A Superstar</a> ·
+    The Village School, Houston TX
+  </div>
+  <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.12);">
+    <a href="faq.html" style="color:rgba(255,255,255,0.55);font-family:var(--font-head);font-size:0.8rem;font-weight:700;text-decoration:none;">❓ Help &amp; FAQ</a>
+    &nbsp;·&nbsp;
+    <a href="mailto:aria@ideasuperstar.com" style="color:rgba(255,255,255,0.55);font-family:var(--font-head);font-size:0.8rem;font-weight:700;text-decoration:none;">✉️ Contact</a>
+    &nbsp;·&nbsp;
+    <a href="http://ideasuperstar.com" style="color:rgba(255,255,255,0.55);font-family:var(--font-head);font-size:0.8rem;font-weight:700;text-decoration:none;">📚 I.D.E.A Superstar</a>
+  </div>
+</footer>
+
+<script>
+  const PROXY_URL = 'https://culturereads-proxy.nishanth-raj-d17.workers.dev';
+
+  let readSpeed = 1, currentUtterance = null, currentWordEl = null;
+  let lastTranslation = '', lastCultural = '', lastTargetLang = '';
+  let lastRequestTime = 0, requestCount = 0;
+  const MAX_REQUESTS_PER_SESSION = 20;
+  const COOLDOWN_MS = 5000;
+
+  const langCodeMap = {
+    'English':'en-US','Spanish':'es-ES','French':'fr-FR','Portuguese':'pt-PT',
+    'Arabic':'ar-SA','Hindi':'hi-IN','Urdu':'ur-PK','Bengali':'bn-BD',
+    'Swahili':'sw-KE','Tagalog':'fil-PH','Vietnamese':'vi-VN','Tamil':'ta-IN',
+    'Punjabi':'pa-IN','Nepali':'ne-NP','Khmer':'km-KH','Yoruba':'yo-NG',
+    'Hausa':'ha-NG','Zulu':'zu-ZA','Amharic':'am-ET','Somali':'so-SO',
+    'Igbo':'ig-NG','Pashto':'ps-AF','Dari':'fa-AF','Hmong':'hmn',
+    'Tigrinya':'ti-ER','Chinese/Mandarin':'zh-CN','Russian':'ru-RU',
+    'German':'de-DE','Japanese':'ja-JP','Turkish':'tr-TR'
+  };
+
+  // All supported source languages for auto-detection mapping
+  const langNameMap = {
+    'english':'English','spanish':'Spanish','arabic':'Arabic','hindi':'Hindi',
+    'french':'French','portuguese':'Portuguese','mandarin':'Chinese/Mandarin',
+    'chinese':'Chinese/Mandarin','russian':'Russian','german':'German',
+    'japanese':'Japanese','turkish':'Turkish','swahili':'Swahili','tagalog':'Tagalog',
+    'vietnamese':'Vietnamese','urdu':'Urdu','bengali':'Bengali','somali':'Somali',
+    'amharic':'Amharic','hausa':'Hausa','nepali':'Nepali','khmer':'Khmer',
+    'hmong':'Hmong','pashto':'Pashto','punjabi':'Punjabi','tamil':'Tamil',
+    'yoruba':'Yoruba','igbo':'Igbo','zulu':'Zulu','tigrinya':'Tigrinya','dari':'Dari'
+  };
+
+  const wods = [
+    {word:'Ubuntu',lang:'(Zulu)',meaning:'I am because we are — shared humanity'},
+    {word:'Sisu',lang:'(Finnish)',meaning:'Inner strength in the face of hardship'},
+    {word:'Hygge',lang:'(Danish)',meaning:'Cozy comfort and togetherness'},
+    {word:'Ikigai',lang:'(Japanese)',meaning:'Your reason for getting up in the morning'},
+    {word:'Sobremesa',lang:'(Spanish)',meaning:'Time spent at the table after a meal, just talking'},
+    {word:'Toska',lang:'(Russian)',meaning:'A vague, restless longing'},
+    {word:'Lagom',lang:'(Swedish)',meaning:'Just the right amount — not too much, not too little'},
+    {word:'Meraki',lang:'(Greek)',meaning:'Doing something with your whole heart and soul'},
+    {word:'Mamihlapinatapai',lang:'(Yaghan)',meaning:'A shared look between two people who both want the same thing'},
+    {word:'Forelsket',lang:'(Norwegian)',meaning:'The euphoria of falling in love'},
+    {word:'Wabi-Sabi',lang:'(Japanese)',meaning:'Finding beauty in imperfection and impermanence'},
+    {word:'Schadenfreude',lang:'(German)',meaning:"Pleasure from another person's misfortune"}
+  ];
+
+  const funFacts = [
+    "There are over 7,000 languages spoken in the world — about half are in danger of disappearing.",
+    "Papua New Guinea has over 840 languages for just 9 million people!",
+    "Swahili is spoken by over 200 million people across East Africa.",
+    "About 43% of the world's population is bilingual.",
+    "In Yoruba, tones completely change word meanings — the same syllable can mean different things!",
+    "Arabic script is written right-to-left and is the basis for Urdu, Pashto, and Dari.",
+    "Amharic, spoken in Ethiopia, uses a script called Ge'ez with 231 characters.",
+    "The word 'tea' comes from the Chinese word 'te' — almost every language borrowed it.",
+    "Tagalog has a word 'gigil' — the irresistible urge to squeeze something unbearably cute.",
+    "Sign languages are complete languages with their own grammar and syntax.",
+    "Mandarin Chinese has over 50,000 characters, though you only need about 2,000 for daily life.",
+    "Russian uses the Cyrillic alphabet, which was created in the 9th century by two monks."
+  ];
+
+  // Loading messages — rotated for variety
+  const loadingMessages = [
+    "Bridging languages with care...",
+    "Asking our multilingual friend...",
+    "Exploring cultures and words...",
+    "Translating with heart...",
+    "Connecting languages...",
+    "Finding the right words...",
+    "Reading between the lines...",
+    "Unlocking this language for you..."
+  ];
+
+
+
+  window.addEventListener('load', () => {
+    const w = wods[Math.floor(Math.random() * wods.length)];
+    document.getElementById('wod-word').textContent = w.word;
+    document.getElementById('wod-lang').textContent = w.lang;
+    document.getElementById('wod-word').title = w.meaning;
+    document.getElementById('fun-fact-text').textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
+    if (localStorage.getItem('cr_seen_tip')) document.getElementById('onboarding-tip').style.display = 'none';
+    else localStorage.setItem('cr_seen_tip', '1');
+  });
+
+  // Character count with colour feedback
+  document.getElementById('input-text').addEventListener('input', function() {
+    const len = this.value.length;
+    const el = document.getElementById('char-count');
+    el.textContent = len + ' / 3000';
+    el.className = len >= 2900 ? 'char-count-danger' : len >= 2500 ? 'char-count-warn' : 'char-count-ok';
+  });
+
+
+
+  // ── PROXY CALLS ────────────────────────────────────────────────────────
+  async function callClaude(systemPrompt, userPrompt) {
+    const response = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1500,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Request failed. Please try again.');
+    }
+    const data = await response.json();
+    return data.content[0].text;
+  }
+
+  async function callClaudeWithImage(base64, mediaType) {
+    const response = await fetch(PROXY_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mediaType, data: base64 } },
+            { type: 'text', text: 'Please extract all the text visible in this image. Then detect what language the text is written in. Return ONLY valid JSON in this format: {"text": "the extracted text here", "language": "English"} — where language is the name of the detected language in English. If no text is found, return {"text": "", "language": ""}.' }
+          ]
+        }]
+      })
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error?.message || 'Could not read image.');
+    }
+    const data = await response.json();
+    const raw = data.content[0].text.trim();
+    const m = raw.match(/\{[\s\S]*\}/);
+    return JSON.parse(m ? m[0] : raw);
+  }
+  // ── END PROXY CALLS ────────────────────────────────────────────────────
+
+  async function checkContentSafety(text) {
+    const sys = `You are a content safety moderator for CultureReads, an educational website for students aged 8-14. Review the submitted text and determine if it is safe and appropriate for this age group.
+Flag content as UNSAFE if it contains: profanity or swear words, sexual content or innuendo, graphic violence or gore, hate speech, discrimination, bullying, drug or alcohol references, or any other content inappropriate for students under 14.
+Respond ONLY with valid JSON: {"safe": true, "reason": ""} or {"safe": false, "reason": "brief description"}`;
+    const raw = await callClaude(sys, `Please review this text for age-appropriateness:\n\n"${text}"`);
+    const m = raw.match(/\{[\s\S]*\}/);
+    return JSON.parse(m ? m[0] : raw);
+  }
+
+  async function runTranslation() {
+    const text = document.getElementById('input-text').value.trim();
+    const sourceLang = document.getElementById('source-lang').value;
+    const targetLang = document.getElementById('target-lang').value;
+    const simplify = document.getElementById('simplify-toggle').checked;
+
+    if (!text) { showError('Please paste, type, or scan some text first.'); return; }
+    if (!targetLang) { showError('Please select a language to translate into.'); return; }
+
+    const now = Date.now();
+    if (now - lastRequestTime < COOLDOWN_MS) {
+      const wait = Math.ceil((COOLDOWN_MS - (now - lastRequestTime)) / 1000);
+      showError(`Please wait ${wait} more second${wait !== 1 ? 's' : ''} before translating again.`);
+      return;
+    }
+    if (requestCount >= MAX_REQUESTS_PER_SESSION) {
+      showError('You have reached the maximum of 20 translations per session. Please refresh the page to continue.');
+      return;
+    }
+
+    clearError();
+
+    // ── FIX 2: Clear old translation immediately ──
+    clearTranslationOutput();
+    setLoading(true);
+
+    try {
+      const safety = await checkContentSafety(text);
+      if (!safety.safe) {
+        setLoading(false);
+        showError("⚠️ This text contains content that isn't appropriate for CultureReads. Please try different text.");
+        return;
+      }
+
+      const systemPrompt = `You are CultureReads — a warm, knowledgeable multilingual cultural guide created for students aged 8-14, designed by Aria Kottaka Raj, passionate about inclusion and belonging.
+Your rules:
+1. Provide context-aware (not word-for-word) translations that feel natural in the target language.
+2. Identify and explain idioms, culturally specific terms, and untranslatable phrases.
+3. Write cultural notes at a level a 5th-7th grader can easily understand.
+4. Be especially thoughtful about underrepresented languages.
+5. NEVER translate or engage with content that is inappropriate for students under 14. If such content appears, return {"error": "inappropriate_content"}.
+${simplify ? '6. IMPORTANT: Simplify for younger readers (Grades 3-6). Use simple words and short sentences.' : ''}
+ALWAYS respond with ONLY valid JSON:
+{"translation":"full translated text","cultural_notes":[{"term":"phrase","icon":"emoji","explanation":"student-friendly explanation"}],"pronunciation_tip":"brief tip about pronouncing this language","no_notes_message":"friendly message if no notes needed"}`;
+
+      const raw = await callClaude(systemPrompt, `Translate from ${sourceLang} to ${targetLang}:\n"${text}"`);
+      let result;
+      try { const m = raw.match(/\{[\s\S]*\}/); result = JSON.parse(m ? m[0] : raw); }
+      catch { throw new Error('Unexpected response. Please try again.'); }
+
+      if (result.error === 'inappropriate_content') {
+        setLoading(false);
+        showError("⚠️ This text contains content that isn't appropriate for CultureReads. Please try different text.");
+        return;
+      }
+
+      lastTranslation = result.translation || '';
+      lastCultural = result;
+      lastTargetLang = targetLang;
+      lastRequestTime = Date.now();
+      requestCount++;
+
+      // ── FIX 3: Auto-clear image after successful translation ──
+      clearImage();
+
+      renderTranslation(result.translation, targetLang);
+      renderCultural(result);
+      setLoading(false);
+
+    } catch(err) { setLoading(false); showError(err.message || 'Something went wrong. Please try again.'); }
+  }
+
+  // ── FIX 2 helper: wipe translation area cleanly ──
+  function clearTranslationOutput() {
+    stopReading();
+    document.getElementById('translated-content').innerHTML = '';
+    document.getElementById('translated-content').style.display = 'none';
+    document.getElementById('output-placeholder').style.display = 'block';
+    document.getElementById('read-controls').style.display = 'none';
+    document.getElementById('action-bar').style.display = 'none';
+    document.getElementById('report-bar').style.display = 'none';
+    document.getElementById('cultural-content').innerHTML = '<div class="cultural-placeholder">✨ Cultural notes will appear here after you translate.</div>';
+    const notesBtn = document.getElementById('translate-notes-btn');
+    if (notesBtn) notesBtn.style.display = 'none';
+    lastTranslation = ''; lastCultural = ''; lastTargetLang = '';
+  }
+
+  // ── FIX 4: Clear All button ──
+  function clearAll() {
+    document.getElementById('input-text').value = '';
+    document.getElementById('char-count').textContent = '0 / 3000';
+    document.getElementById('char-count').className = 'char-count-ok';
+    document.getElementById('target-lang').value = '';
+    document.getElementById('target-lang').classList.add('unselected');
+    document.getElementById('simplify-toggle').checked = false;
+    document.getElementById('ocr-hint').style.display = 'none';
+    clearImage();
+    clearTranslationOutput();
+    clearError();
+    showToast('🗑 All cleared — ready for a fresh start!');
+  }
+
+  function renderTranslation(text, targetLang) {
+    const content = document.getElementById('translated-content');
+    document.getElementById('output-placeholder').style.display = 'none';
+    const words = text.split(/(\s+)/);
+    let html = '';
+    words.forEach(part => {
+      if (/\s+/.test(part)) html += part;
+      else if (part.trim()) {
+        const clean = part.replace(/[.,!?;:"'()]/g, '');
+        html += `<span class="clickable-word" onclick="showWordInfo(this,'${clean.replace(/'/g,"\\'")}','${targetLang}')">${part}</span>`;
+      }
+    });
+    content.innerHTML = html; content.style.display = 'block';
+    document.getElementById('read-controls').style.display = 'flex';
+    document.getElementById('action-bar').style.display = 'flex';
+    document.getElementById('report-bar').style.display = 'flex';
+  }
+
+  function renderCultural(result) {
+    const cc = document.getElementById('cultural-content');
+    const notes = result.cultural_notes || [];
+    const targetLang = document.getElementById('target-lang').value;
+    const notesBtn = document.getElementById('translate-notes-btn');
+    if (notesBtn) {
+      notesBtn.style.display = 'inline-flex';
+      notesBtn.disabled = false;
+      notesBtn.innerHTML = '🌐 Translate notes to ' + targetLang;
+      const lbl = document.getElementById('notes-lang-label');
+      if (lbl) lbl.textContent = targetLang;
+      const existingReset = document.getElementById('notes-reset-btn');
+      if (existingReset) existingReset.remove();
+    }
+    if (notes.length === 0) {
+      cc.innerHTML = `<div class="note-item"><span class="note-icon">✅</span><div class="note-text">${result.no_notes_message || 'This text translates quite directly — no special cultural notes needed!'}</div></div>`;
+      return;
+    }
+    let html = '';
+    if (result.pronunciation_tip) html += `<div class="note-item"><span class="note-icon">🗣️</span><div class="note-text"><strong>Pronunciation Tip:</strong> ${result.pronunciation_tip}</div></div>`;
+    notes.forEach(n => { html += `<div class="note-item"><span class="note-icon">${n.icon || '📖'}</span><div class="note-text"><strong>"${n.term}"</strong> — ${n.explanation}</div></div>`; });
+    cc.innerHTML = html;
+  }
+
+  async function translateCulturalNotes() {
+    const btn = document.getElementById('translate-notes-btn');
+    const targetLang = document.getElementById('target-lang').value;
+    const cc = document.getElementById('cultural-content');
+    const noteItems = cc.querySelectorAll('.note-item .note-text');
+    if (!noteItems.length) return;
+    const originalHTML = cc.innerHTML;
+    btn.disabled = true; btn.innerHTML = '⏳ Translating notes...';
+    const noteTexts = [];
+    noteItems.forEach(el => noteTexts.push(el.innerText));
+    const combined = noteTexts.map((t, i) => `${i+1}. ${t}`).join('\n');
+    try {
+      const sys = `You are a helpful translator for a student educational website. Translate each numbered item into ${targetLang}, keeping the same numbered format. Keep the tone friendly and appropriate for students aged 8-14. Return ONLY the translated numbered list, nothing else.`;
+      const raw = await callClaude(sys, combined);
+      const lines = raw.trim().split('\n').filter(l => l.trim());
+      const translatedTexts = lines.map(l => l.replace(/^\d+\.\s*/, '').trim());
+      noteItems.forEach((el, i) => {
+        if (translatedTexts[i]) {
+          const strong = el.querySelector('strong');
+          if (strong) {
+            const strongText = strong.textContent;
+            const rest = translatedTexts[i].replace(strongText, '').replace(/^[\s—–-]+/, '');
+            el.innerHTML = `<strong>${strongText}</strong> — ${rest}`;
+          } else { el.textContent = translatedTexts[i]; }
+        }
+      });
+      btn.innerHTML = '✅ Notes translated to ' + targetLang;
+      btn.disabled = false;
+      const resetBtn = document.createElement('button');
+      resetBtn.id = 'notes-reset-btn'; resetBtn.className = 'btn btn-sm';
+      resetBtn.style.marginLeft = '8px'; resetBtn.textContent = '↩ Show in English';
+      resetBtn.onclick = () => { cc.innerHTML = originalHTML; btn.innerHTML = '🌐 Translate notes to ' + targetLang; btn.disabled = false; resetBtn.remove(); };
+      btn.parentElement.appendChild(resetBtn);
+    } catch(err) {
+      btn.innerHTML = '🌐 Translate notes to ' + targetLang;
+      btn.disabled = false;
+      showError('Could not translate cultural notes: ' + err.message);
+    }
+  }
+
+  async function showWordInfo(el, word, lang) {
+    currentWordEl = el;
+    const popover = document.getElementById('word-popover');
+    const rect = el.getBoundingClientRect();
+    document.getElementById('pop-word').textContent = word;
+    document.getElementById('pop-phonetic').textContent = '...loading...';
+    document.getElementById('pop-def').textContent = '...fetching...';
+    let top = rect.bottom + window.scrollY + 8, left = rect.left + window.scrollX;
+    if (left + 300 > window.innerWidth - 20) left = window.innerWidth - 320;
+    if (left < 10) left = 10;
+    popover.style.top = top + 'px'; popover.style.left = left + 'px'; popover.style.display = 'block';
+    try {
+      const sys = `You are a language tutor for students aged 8-14. Respond ONLY with JSON: {"phonetic":"simple pronunciation using English letters like /hel-OH/","definition":"simple 1-2 sentence definition a student aged 10-14 can understand"}`;
+      const res = await callClaude(sys, `Phonetic pronunciation and simple definition for the word "${word}" in ${lang}.`);
+      const m = res.match(/\{[\s\S]*\}/); const data = JSON.parse(m ? m[0] : res);
+      document.getElementById('pop-phonetic').textContent = data.phonetic || '';
+      document.getElementById('pop-def').textContent = data.definition || '';
+    } catch {
+      document.getElementById('pop-phonetic').textContent = '(unavailable)';
+      document.getElementById('pop-def').textContent = 'Could not load definition.';
+    }
+  }
+
+  function closePopover() { document.getElementById('word-popover').style.display = 'none'; currentWordEl = null; }
+  function speakWord() { speak(document.getElementById('pop-word').textContent, lastTargetLang, 0.8); }
+
+  document.addEventListener('click', (e) => {
+    const pop = document.getElementById('word-popover');
+    if (!pop.contains(e.target) && !e.target.classList.contains('clickable-word')) closePopover();
+  });
+
+  function reportContent() {
+    const subject = encodeURIComponent('CultureReads — Inappropriate Content Report');
+    const body = encodeURIComponent(`Hi,\n\nI'd like to report a translation on CultureReads that seemed inappropriate.\n\nOriginal text: ${document.getElementById('input-text').value}\n\nTranslated to: ${lastTargetLang}\n\nTranslation output: ${lastTranslation}\n\nPlease review.\n\nThank you.`);
+    window.location.href = `mailto:report@culturereads.org?subject=${subject}&body=${body}`;
+  }
+
+  function readAloud() {
+    if (!lastTranslation) return;
+    stopReading();
+    const langCode = langCodeMap[lastTargetLang] || 'en-US';
+    const words = document.querySelectorAll('.clickable-word');
+    let i = 0;
+    function speakNext() {
+      if (i >= words.length) { document.getElementById('read-btn').style.display = 'inline-flex'; document.getElementById('stop-btn').style.display = 'none'; words.forEach(w => w.classList.remove('highlight-read')); return; }
+      words.forEach(w => w.classList.remove('highlight-read'));
+      words[i].classList.add('highlight-read');
+      words[i].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const utt = new SpeechSynthesisUtterance(words[i].textContent);
+      utt.lang = langCode; utt.rate = readSpeed;
+      utt.onend = () => { i++; speakNext(); };
+      currentUtterance = utt;
+      window.speechSynthesis.speak(utt);
+    }
+    document.getElementById('read-btn').style.display = 'none';
+    document.getElementById('stop-btn').style.display = 'inline-flex';
+    speakNext();
+  }
+
+  function stopReading() {
+    window.speechSynthesis.cancel(); currentUtterance = null;
+    document.querySelectorAll('.clickable-word').forEach(w => w.classList.remove('highlight-read'));
+    const rb = document.getElementById('read-btn'); const sb = document.getElementById('stop-btn');
+    if (rb) rb.style.display = 'inline-flex';
+    if (sb) sb.style.display = 'none';
+  }
+
+  function speak(text, lang, rate = 1) {
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    utt.lang = langCodeMap[lang] || 'en-US'; utt.rate = rate;
+    window.speechSynthesis.speak(utt);
+  }
+
+  function setSpeed(s, btn) {
+    readSpeed = s;
+    document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function copyTranslation() { if (!lastTranslation) return; navigator.clipboard.writeText(lastTranslation).then(() => showToast('✅ Translation copied!')); }
+
+  function saveTranslation() {
+    if (!lastTranslation) return;
+    const notes = (lastCultural.cultural_notes || []).map(n => `• ${n.term}: ${n.explanation}`).join('\n');
+    const content = `CULTUREREADS — TRANSLATION\n${'─'.repeat(40)}\nFrom: ${document.getElementById('source-lang').value} → ${lastTargetLang}\nCreated by Aria Kottaka Raj\n\n${'─'.repeat(40)}\nTRANSLATION:\n${lastTranslation}\n\n${'─'.repeat(40)}\nCULTURAL NOTES:\n${notes || 'No special cultural notes.'}\n\n${'─'.repeat(40)}\nculturereads.org`;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+    a.download = `CultureReads-${lastTargetLang}.txt`;
+    a.click();
+  }
+
+  function shareTranslation() {
+    if (!lastTranslation) return;
+    navigator.clipboard.writeText(`🌍 CultureReads (${lastTargetLang}):\n\n${lastTranslation.substring(0, 200)}${lastTranslation.length > 200 ? '...' : ''}\n\nTranslated by CultureReads — created by Aria Kottaka Raj`).then(() => showToast('📤 Copied to clipboard!'));
+  }
+
+  function setLoading(on) {
+    const btn = document.getElementById('translate-btn');
+    btn.disabled = on;
+    btn.textContent = on ? '⏳ Checking & translating...' : '🌐 Translate & Explain';
+    // Rotate loading message
+    if (on) {
+      document.getElementById('spinner-text').textContent = loadingMessages[Math.floor(Math.random() * loadingMessages.length)];
+    }
+    document.getElementById('spinner').style.display = on ? 'flex' : 'none';
+    if (on) {
+      document.getElementById('output-placeholder').style.display = 'none';
+      document.getElementById('translated-content').style.display = 'none';
+      document.getElementById('cultural-content').innerHTML = '<div class="cultural-placeholder">⏳ Generating cultural notes...</div>';
+      document.getElementById('read-controls').style.display = 'none';
+      document.getElementById('action-bar').style.display = 'none';
+      document.getElementById('report-bar').style.display = 'none';
+      const notesBtn = document.getElementById('translate-notes-btn');
+      if (notesBtn) notesBtn.style.display = 'none';
+    }
+  }
+
+  function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.style.display = 'block'; }
+  function clearError() { document.getElementById('error-msg').style.display = 'none'; }
+
+  function showToast(msg, duration = 3000) {
+    const t = document.createElement('div'); t.textContent = msg;
+    Object.assign(t.style, { position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)', background: 'var(--ink)', color: 'var(--white)', padding: '10px 22px', borderRadius: '50px', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.88rem', zIndex: '9999', boxShadow: 'var(--shadow-md)', transition: 'opacity 0.3s' });
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, duration);
+  }
+
+  // ── IMAGE UPLOAD & CAMERA OCR ──────────────────────────────────────────
+  let currentImageBase64 = null, currentImageMediaType = null;
+
+  function handleImageUpload(event) {
+    const file = event.target.files[0];
+    event.target.value = '';
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) { showError('Image is too large. Please use an image under 5MB.'); return; }
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) { showError('Unsupported image type. Please use JPG, PNG, GIF, or WebP.'); return; }
+    clearError();
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const dataUrl = e.target.result;
+      const base64 = dataUrl.split(',')[1];
+      const mediaType = file.type;
+      currentImageBase64 = base64; currentImageMediaType = mediaType;
+      const strip = document.getElementById('image-preview-strip');
+      strip.style.display = 'flex';
+      document.getElementById('img-preview-thumb').src = dataUrl;
+      document.getElementById('img-file-name').textContent = file.name.length > 24 ? file.name.substring(0, 22) + '…' : file.name;
+      document.getElementById('ocr-hint').style.display = 'none';
+      setOcrStatus('reading', '📖 Reading image...');
+      await extractTextFromImage(base64, mediaType);
+    };
+    reader.onerror = () => showError('Could not read the image file. Please try again.');
+    reader.readAsDataURL(file);
+  }
+
+  async function extractTextFromImage(base64, mediaType) {
+    try {
+      // ── FIX 6: auto-detect language from image ──
+      const result = await callClaudeWithImage(base64, mediaType);
+
+      if (!result.text || result.text.trim() === '') {
+        setOcrStatus('error', '⚠️ No text found. Try a clearer photo.');
+        return;
+      }
+
+      const ta = document.getElementById('input-text');
+      ta.value = result.text.substring(0, 3000);
+      const len = ta.value.length;
+      const cc = document.getElementById('char-count');
+      cc.textContent = len + ' / 3000';
+      cc.className = len >= 2900 ? 'char-count-danger' : len >= 2500 ? 'char-count-warn' : 'char-count-ok';
+
+      // Auto-set source language if detected
+      let detectedLabel = '';
+      if (result.language) {
+        const key = result.language.toLowerCase();
+        const matched = langNameMap[key];
+        if (matched) {
+          document.getElementById('source-lang').value = matched;
+          detectedLabel = ` (detected: ${result.language})`;
+        }
+      }
+
+      setOcrStatus('success', `✅ Text extracted${detectedLabel} — select your target language and translate!`);
+
+      // ── FIX 1: Show clear guidance hint ──
+      document.getElementById('ocr-hint').style.display = 'block';
+
+    } catch(err) {
+      setOcrStatus('error', '⚠️ ' + (err.message || 'Could not read image.'));
+    }
+  }
+
+  function setOcrStatus(type, msg) {
+    document.getElementById('ocr-spinner').style.display = type === 'reading' ? 'block' : 'none';
+    const status = document.getElementById('img-status');
+    status.textContent = msg;
+    status.className = 'img-status' + (type === 'success' ? ' success' : type === 'error' ? ' error' : '');
+  }
+
+  function clearImage() {
+    currentImageBase64 = null; currentImageMediaType = null;
+    document.getElementById('image-preview-strip').style.display = 'none';
+    document.getElementById('img-preview-thumb').src = '';
+    document.getElementById('img-file-name').textContent = '—';
+    document.getElementById('img-status').textContent = '';
+    document.getElementById('ocr-spinner').style.display = 'none';
+    document.getElementById('ocr-hint').style.display = 'none';
+  }
+  // ── END IMAGE OCR ───────────────────────────────────────────────────────
+
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // ── PWA SERVICE WORKER ─────────────────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('CultureReads PWA ready'))
+        .catch(err => console.log('SW not loaded:', err));
+    });
+  }
+</script>
+
+<a href="faq.html" id="help-fab" title="Help & FAQ">
+  ❓
+  <span class="fab-tooltip">Help &amp; FAQ</span>
+</a>
+
+</body>
+</html>

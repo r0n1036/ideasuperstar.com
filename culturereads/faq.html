@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="CultureReads FAQ">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="manifest" href="/manifest.json">
+<title>FAQ — CultureReads</title>
+<meta name="theme-color" content="#1D6A5A">
+<meta name="description" content="Frequently asked questions about CultureReads — how it works, how to use it, and how we keep it safe.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --teal: #1D6A5A; --teal-mid: #2E9B7E; --teal-light: #E1F5EE; --teal-pale: #F0FAF6;
+    --gold: #F5A623; --gold-light: #FEF3D7; --coral: #E05C3A; --coral-light: #FDECEA;
+    --purple: #6B3FA0; --purple-light: #F3EEFF;
+    --ink: #1A2E28; --body-text: #3D4F4A; --muted: #718780; --border: #D4E8E1;
+    --bg: #F7FBF9; --white: #FFFFFF;
+    --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px; --radius-xl: 28px;
+    --shadow-sm: 0 1px 4px rgba(29,106,90,0.08); --shadow-md: 0 4px 16px rgba(29,106,90,0.12);
+    --font-head: 'Nunito', sans-serif; --font-body: 'Lora', serif;
+  }
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--body-text); line-height: 1.7; }
+
+  /* NAV */
+  nav { background: var(--white); border-bottom: 2px solid var(--teal-light); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 68px; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-sm); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .logo-img { height: 42px; width: auto; display: block; }
+  .logo-text { font-family: var(--font-head); font-size: 1.35rem; font-weight: 900; color: var(--teal); }
+  .logo-text span { color: var(--gold); }
+  .nav-back { font-family: var(--font-head); font-size: 0.85rem; font-weight: 700; color: var(--teal); text-decoration: none; background: var(--teal-light); padding: 8px 18px; border-radius: 50px; transition: background 0.2s; }
+  .nav-back:hover { background: var(--teal); color: var(--white); }
+  @media (max-width: 600px) { nav { padding: 0 16px; } .logo-text { font-size: 1.1rem; } }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, var(--teal) 0%, #2E9B7E 60%, #48C9A0 100%); color: var(--white); padding: 56px 40px 48px; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content:''; position:absolute; top:-40px; right:-40px; width:200px; height:200px; border-radius:50%; background:rgba(255,255,255,0.06); }
+  .hero::after { content:''; position:absolute; bottom:-50px; left:-30px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.05); }
+  .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.3); border-radius: 50px; padding: 6px 16px; font-family: var(--font-head); font-size: 0.82rem; font-weight: 700; margin-bottom: 16px; }
+  .hero h1 { font-family: var(--font-head); font-weight: 900; font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.15; margin-bottom: 12px; }
+  .hero p { font-family: var(--font-head); font-size: 1.05rem; opacity: 0.88; max-width: 520px; margin: 0 auto; font-weight: 600; }
+  @media (max-width: 600px) { .hero { padding: 36px 20px 32px; } }
+
+  /* QUICK NAV */
+  .quick-nav { max-width: 860px; margin: 0 auto; padding: 32px 20px 0; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .qn-chip { background: var(--white); border: 1.5px solid var(--border); border-radius: 50px; padding: 8px 18px; font-family: var(--font-head); font-size: 0.82rem; font-weight: 700; color: var(--teal); text-decoration: none; transition: all 0.15s; white-space: nowrap; }
+  .qn-chip:hover { background: var(--teal); color: var(--white); border-color: var(--teal); }
+
+  /* MAIN LAYOUT */
+  main { max-width: 860px; margin: 0 auto; padding: 36px 20px 64px; }
+
+  /* SECTION HEADERS */
+  .faq-section { margin-bottom: 48px; }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 2px solid var(--teal-light); }
+  .section-icon { width: 48px; height: 48px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+  .icon-teal { background: var(--teal-light); }
+  .icon-gold { background: var(--gold-light); }
+  .icon-coral { background: var(--coral-light); }
+  .icon-purple { background: var(--purple-light); }
+  .section-title { font-family: var(--font-head); font-weight: 900; font-size: 1.25rem; color: var(--ink); }
+  .section-subtitle { font-family: var(--font-head); font-size: 0.82rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+
+  /* FAQ ITEMS */
+  .faq-item { background: var(--white); border-radius: var(--radius-lg); border: 1.5px solid var(--border); margin-bottom: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: box-shadow 0.2s; }
+  .faq-item:hover { box-shadow: var(--shadow-md); }
+  .faq-q { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; cursor: pointer; user-select: none; }
+  .faq-q-text { font-family: var(--font-head); font-weight: 800; font-size: 0.95rem; color: var(--ink); flex: 1; line-height: 1.4; }
+  .faq-chevron { font-size: 1rem; color: var(--teal); transition: transform 0.25s; flex-shrink: 0; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0 20px 18px; border-top: 1px solid var(--teal-light); }
+  .faq-item.open .faq-a { display: block; }
+  .faq-a p { font-family: var(--font-body); font-size: 0.95rem; color: var(--body-text); line-height: 1.8; margin-bottom: 10px; }
+  .faq-a p:last-child { margin-bottom: 0; }
+  .faq-a ul { margin: 8px 0 10px 18px; }
+  .faq-a ul li { font-family: var(--font-body); font-size: 0.93rem; color: var(--body-text); line-height: 1.7; margin-bottom: 4px; }
+  .faq-a .tip { background: var(--teal-pale); border-left: 3px solid var(--teal-mid); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 10px 14px; margin-top: 12px; font-family: var(--font-head); font-size: 0.85rem; color: var(--teal); font-weight: 600; }
+  .faq-a .tip strong { font-weight: 800; }
+  .faq-a .warn { background: var(--coral-light); border-left: 3px solid var(--coral); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 10px 14px; margin-top: 12px; font-family: var(--font-head); font-size: 0.85rem; color: var(--coral); font-weight: 600; }
+  .faq-a .highlight { background: var(--gold-light); border-left: 3px solid var(--gold); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 10px 14px; margin-top: 12px; font-family: var(--font-head); font-size: 0.85rem; color: #7a5000; font-weight: 600; }
+  .step { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+  .step-num { width: 26px; height: 26px; background: var(--teal); color: var(--white); border-radius: 50%; font-family: var(--font-head); font-weight: 900; font-size: 0.78rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .step-text { font-family: var(--font-body); font-size: 0.93rem; color: var(--body-text); line-height: 1.7; }
+
+  /* SAFETY BANNER */
+  .safety-banner { background: linear-gradient(135deg, var(--teal) 0%, #2E9B7E 100%); border-radius: var(--radius-xl); padding: 36px 32px; margin-bottom: 48px; color: var(--white); }
+  .safety-banner h2 { font-family: var(--font-head); font-weight: 900; font-size: 1.3rem; margin-bottom: 10px; }
+  .safety-banner p { font-family: var(--font-head); font-size: 0.9rem; opacity: 0.9; font-weight: 600; line-height: 1.7; margin-bottom: 20px; }
+  .safety-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 560px) { .safety-grid { grid-template-columns: 1fr; } }
+  .safety-card { background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.2); border-radius: var(--radius-md); padding: 16px; }
+  .safety-card .sc-icon { font-size: 1.4rem; margin-bottom: 6px; }
+  .safety-card .sc-title { font-family: var(--font-head); font-weight: 800; font-size: 0.88rem; margin-bottom: 4px; }
+  .safety-card .sc-body { font-family: var(--font-head); font-size: 0.78rem; opacity: 0.85; font-weight: 600; line-height: 1.5; }
+
+  /* CONTACT STRIP */
+  .contact-strip { background: var(--white); border: 1.5px solid var(--border); border-radius: var(--radius-xl); padding: 32px; text-align: center; margin-bottom: 20px; box-shadow: var(--shadow-sm); }
+  .contact-strip h3 { font-family: var(--font-head); font-weight: 900; font-size: 1.1rem; color: var(--ink); margin-bottom: 8px; }
+  .contact-strip p { font-family: var(--font-head); font-size: 0.88rem; color: var(--muted); font-weight: 600; margin-bottom: 18px; }
+  .contact-strip a { display: inline-flex; align-items: center; gap: 8px; background: var(--teal); color: var(--white); padding: 11px 24px; border-radius: 50px; font-family: var(--font-head); font-weight: 800; font-size: 0.9rem; text-decoration: none; transition: background 0.2s; }
+  .contact-strip a:hover { background: var(--teal-mid); }
+
+  /* FOOTER */
+  footer { background: var(--ink); color: rgba(255,255,255,0.6); text-align: center; padding: 32px 20px; font-family: var(--font-head); font-size: 0.82rem; }
+  footer .f-logo { font-weight: 900; font-size: 1.1rem; color: var(--white); margin-bottom: 8px; }
+  footer .f-logo span { color: var(--gold); }
+  footer a { color: var(--gold); text-decoration: none; }
+
+  /* ── MOBILE additions ── */
+  @media (max-width: 600px) {
+    .hero { padding: 32px 16px 28px; }
+    .quick-nav { padding: 20px 16px 0; gap: 8px; }
+    .qn-chip { font-size: 0.76rem; padding: 6px 14px; }
+    main { padding: 28px 16px 48px; }
+    .faq-q { padding: 14px 16px; }
+    .faq-a { padding: 0 16px 14px; }
+    .contact-strip { padding: 24px 16px; }
+    footer { padding: 28px 16px; padding-bottom: calc(28px + env(safe-area-inset-bottom)); }
+    .f-links { gap: 12px; }
+    nav { padding: 0 16px; height: 58px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img class="logo-img" src="data:image/jpeg;base64,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" alt="CultureReads" />
+    <div class="logo-text">Culture<span>Reads</span></div>
+  </a>
+  <a href="index.html" class="nav-back">← Back to App</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-badge">❓ Help & FAQ</div>
+  <h1>How CultureReads Works</h1>
+  <p>Simple answers to your questions — from how to translate text to how we keep things safe for students.</p>
+</div>
+
+<div class="quick-nav">
+  <a href="#getting-started" class="qn-chip">🚀 Getting Started</a>
+  <a href="#translating" class="qn-chip">🌐 Translating Text</a>
+  <a href="#image-scan" class="qn-chip">📷 Scanning Images</a>
+  <a href="#features" class="qn-chip">✨ Features</a>
+  <a href="#safety" class="qn-chip">🛡️ Safety & Privacy</a>
+  <a href="#troubleshooting" class="qn-chip">🔧 Troubleshooting</a>
+</div>
+
+<main>
+
+  <!-- GETTING STARTED -->
+  <div class="faq-section" id="getting-started">
+    <div class="section-header">
+      <div class="section-icon icon-teal">🚀</div>
+      <div>
+        <div class="section-title">Getting Started</div>
+        <div class="section-subtitle">New to CultureReads? Start here.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What is CultureReads?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>CultureReads is a free translation tool created by Aria Kottaka Raj — a student at The Village School in Houston, Texas — who believes that every family deserves to understand the world around them in their own language.</p>
+        <p>It's not just a word-for-word translator. CultureReads also explains the <strong>cultural meaning</strong> behind phrases, idioms, and expressions — the things that regular translators often miss. It can even read the translation aloud so you can hear how it sounds.</p>
+        <div class="tip">💡 <strong>Great for:</strong> school notices, letters from doctors or teachers, menus, signs, news articles, or anything written in a language your family is still learning.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Who is CultureReads made for?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>CultureReads was designed with students aged 8–14 in mind, but it's useful for anyone in a multilingual family or community. It's especially helpful for:</p>
+        <ul>
+          <li>Families who have recently moved to a new country and are still learning the language</li>
+          <li>Students who receive school notices or homework in a language their parents don't speak fluently</li>
+          <li>Teachers who want to help students from different backgrounds understand content</li>
+          <li>Anyone curious about language and culture</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Do I need to create an account or sign up?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>No — CultureReads requires absolutely no account, sign-up, or personal information. You just open the website and start using it straight away. There's nothing to download, install, or register for.</p>
+        <div class="tip">💡 <strong>Tip:</strong> You can add CultureReads to your phone's home screen so it opens like an app — no App Store needed! On iPhone, tap the Share button in Safari and choose "Add to Home Screen." On Android, tap the three dots in Chrome and choose "Add to Home Screen."</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Is CultureReads free to use?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes, CultureReads is completely free for all users. There are no subscription fees, no hidden charges, and no premium tiers. It was built to help families and students, and that mission doesn't come with a price tag.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSLATING -->
+  <div class="faq-section" id="translating">
+    <div class="section-header">
+      <div class="section-icon icon-teal">🌐</div>
+      <div>
+        <div class="section-title">Translating Text</div>
+        <div class="section-subtitle">How to get the most from your translations.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">How do I translate something?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="step"><div class="step-num">1</div><div class="step-text">In the <strong>"From"</strong> dropdown, select the language the text is written in — for example, English.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">In the <strong>"Into"</strong> dropdown, choose the language you want to translate into — for example, Spanish or Hindi.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Type or paste your text into the big text box. You can enter up to 3,000 characters at a time.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Click the green <strong>"Translate &amp; Explain"</strong> button.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-text">Your translation appears on the right, along with cultural notes below explaining any tricky phrases.</div></div>
+        <div class="tip">💡 <strong>Tip:</strong> After translating, click any word in the translation to see how it's pronounced and what it means!</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What languages are supported?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>CultureReads supports 30+ languages, grouped by region to make them easy to find:</p>
+        <ul>
+          <li><strong>African:</strong> Swahili, Hausa, Yoruba, Igbo, Amharic, Somali, Zulu, Tigrinya</li>
+          <li><strong>East Asian:</strong> Chinese/Mandarin, Japanese</li>
+          <li><strong>South Asian:</strong> Hindi, Urdu, Bengali, Nepali, Punjabi, Tamil</li>
+          <li><strong>Southeast Asian:</strong> Tagalog, Vietnamese, Khmer, Hmong</li>
+          <li><strong>Middle Eastern:</strong> Arabic, Pashto, Dari, Turkish</li>
+          <li><strong>European:</strong> Spanish, Portuguese, French, German, Russian, English</li>
+        </ul>
+        <p>We chose this list deliberately — many of these languages are underrepresented in mainstream translation tools. CultureReads treats every language as equally important.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What are Cultural Notes and why do they matter?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Cultural Notes appear below every translation. They explain phrases, idioms, and expressions that don't translate directly — the parts of language that carry cultural meaning beyond just the words.</p>
+        <p>For example, if you translate an English phrase like "break a leg," a word-for-word translation in another language would make no sense. CultureReads explains what the phrase actually means and how to express it naturally in the target language.</p>
+        <div class="highlight">✨ This is what makes CultureReads different from a regular translator — it helps you truly understand, not just decode.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Can I hear the translation read aloud?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes! After a translation appears, click the <strong>"🔊 Read Aloud"</strong> button. The translation will be read out word by word, with each word highlighted as it's spoken so you can follow along.</p>
+        <p>You can also control the speed — choose Slow 🐢 if you're learning, Normal for everyday use, or Fast 🚀 if you just need a quick listen.</p>
+        <p>You can also click on any individual word in the translation to hear just that word pronounced, along with a simple definition.</p>
+        <div class="tip">💡 <strong>Note:</strong> Read Aloud works best on Chrome and Safari. The voice quality depends on what languages your device has installed — some languages sound more natural than others.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What is the "Simplify for younger readers" toggle?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>This toggle is for children in Grades 3–6 (roughly ages 8–11). When switched on, CultureReads uses simpler words and shorter sentences in both the translation and the cultural notes — making everything easier for younger readers to understand on their own.</p>
+        <p>Turn it off if you're translating for an adult or older student who doesn't need simplified language.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Can I save or share a translation?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes — three buttons appear after every translation:</p>
+        <ul>
+          <li><strong>📋 Copy</strong> — copies the translation text to your clipboard so you can paste it anywhere</li>
+          <li><strong>💾 Save</strong> — downloads a text file with the full translation and cultural notes, which you can keep or share</li>
+          <li><strong>📤 Share</strong> — copies a shareable version of the translation to your clipboard, ready to paste into a message or email</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Why is there a limit of 20 translations per session?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Each translation uses a small amount of computing power from our AI. To keep CultureReads free and available for everyone, we limit each visit to 20 translations. This is more than enough for most users in a single sitting.</p>
+        <p>If you reach the limit, simply refresh the page to start a new session. Your limit resets each time you open or reload the page.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGE SCANNING -->
+  <div class="faq-section" id="image-scan">
+    <div class="section-header">
+      <div class="section-icon icon-gold">📷</div>
+      <div>
+        <div class="section-title">Scanning Images</div>
+        <div class="section-subtitle">Point your camera at text and translate it instantly.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">How do I translate text from a photo or image?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Below the text box, you'll see two buttons — <strong>📁 Upload Image</strong> and <strong>📷 Take Photo</strong>.</p>
+        <div class="step"><div class="step-num">1</div><div class="step-text">Tap <strong>Upload Image</strong> to choose a photo already saved on your device, or tap <strong>Take Photo</strong> to use your camera to photograph text right now.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">CultureReads reads the image and automatically extracts the text — you'll see it appear in the text box within a few seconds.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">It also tries to detect what language the text is in and sets the "From" dropdown automatically.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Select your target language in the "Into" dropdown and tap <strong>Translate &amp; Explain</strong>.</div></div>
+        <div class="tip">💡 <strong>Best results:</strong> Make sure the text is well-lit, in focus, and not at a steep angle. Printed text works better than handwriting.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What kinds of images work best?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>CultureReads works best with clear, high-contrast text. Here are some things that work well:</p>
+        <ul>
+          <li>Printed school letters, notices, and permission slips</li>
+          <li>Restaurant menus and food packaging labels</li>
+          <li>Signs, posters, and notices</li>
+          <li>Screenshots of text messages or documents</li>
+          <li>Book pages and newspaper articles</li>
+        </ul>
+        <p>It can struggle with very small text, blurry photos, heavily stylised fonts, or text written at an extreme angle. If the extraction doesn't look right, try taking a clearer photo or typing the text manually.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">The image was read but the "From" language is wrong. What do I do?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>CultureReads tries to automatically detect the language of the text in the image, but it doesn't always get it right — especially if the text is short or contains proper names and numbers.</p>
+        <p>If the "From" language is set incorrectly, simply tap the <strong>"From"</strong> dropdown and change it to the correct language before hitting Translate. The extracted text will still be there — you don't need to scan the image again.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="faq-section" id="features">
+    <div class="section-header">
+      <div class="section-icon icon-purple">✨</div>
+      <div>
+        <div class="section-title">Features & Tips</div>
+        <div class="section-subtitle">Getting the most out of CultureReads.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What is the Word of the Day?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Every time you open CultureReads, a random "Word of the Day" appears in the hero banner at the top of the page. These are beautiful, often untranslatable words from languages around the world — words that carry deep meaning and have no direct equivalent in English.</p>
+        <p>Examples include <em>Ubuntu</em> (Zulu for "I am because we are"), <em>Ikigai</em> (Japanese for your reason for getting up in the morning), and <em>Sobremesa</em> (Spanish for the time spent talking at the table after a meal). Hover over or tap the word to see its meaning.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What does the "Clear All" button do?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>The red <strong>🗑 Clear All</strong> button in the top corner of the "Your Text" card resets everything in one tap — it clears the text box, removes any uploaded image, wipes the translation, resets the language selectors, and clears the cultural notes. It's a quick fresh start when you're moving to a new topic.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Can I translate the Cultural Notes into my language too?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes! After a translation appears, look at the Cultural Notes section — there's a button that says <strong>"🌐 Translate notes to [language]"</strong>. Clicking it translates the cultural explanations into the same language as your translation, so non-English speakers can understand the notes too.</p>
+        <p>There's also a <strong>"↩ Show in English"</strong> button to switch back if you need to.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Can I install CultureReads on my phone like an app?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes! CultureReads is a Progressive Web App (PWA), which means you can add it to your phone's home screen and it opens just like a regular app — full screen, no browser bar.</p>
+        <p><strong>On iPhone (Safari only):</strong></p>
+        <div class="step"><div class="step-num">1</div><div class="step-text">Open CultureReads in Safari</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Tap the Share button (the box with an arrow at the bottom of the screen)</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Scroll down and tap <strong>"Add to Home Screen"</strong></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Tap <strong>Add</strong> — the icon will appear on your home screen</div></div>
+        <p style="margin-top:10px;"><strong>On Android (Chrome):</strong></p>
+        <div class="step"><div class="step-num">1</div><div class="step-text">Open CultureReads in Chrome</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Tap the three dots (⋮) menu at the top right</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Tap <strong>"Add to Home Screen"</strong> and confirm</div></div>
+        <div class="tip">💡 No App Store needed — it's free and instant!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAFETY BANNER -->
+  <div class="safety-banner" id="safety">
+    <h2>🛡️ Safety & Privacy</h2>
+    <p>CultureReads was built for students and families. Here's how we keep it safe, private, and age-appropriate — no fine print, just plain language.</p>
+    <div class="safety-grid">
+      <div class="safety-card">
+        <div class="sc-icon">🔍</div>
+        <div class="sc-title">Content Safety Check</div>
+        <div class="sc-body">Every piece of text is automatically screened before translation. If it contains anything inappropriate for students under 14, it is blocked — not translated.</div>
+      </div>
+      <div class="safety-card">
+        <div class="sc-icon">🔒</div>
+        <div class="sc-title">No Data Stored</div>
+        <div class="sc-body">CultureReads does not save, store, or share any text you enter. Everything happens in real time and is gone when you close the page.</div>
+      </div>
+      <div class="safety-card">
+        <div class="sc-icon">👤</div>
+        <div class="sc-title">No Personal Information</div>
+        <div class="sc-body">We collect no names, emails, locations, or any personal data. There are no accounts, no cookies for tracking, and no advertising.</div>
+      </div>
+      <div class="safety-card">
+        <div class="sc-icon">🚩</div>
+        <div class="sc-title">Report Button</div>
+        <div class="sc-body">If a translation ever seems inappropriate, tap the "Report" button to send us a message. We review every report and take it seriously.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAFETY FAQ ITEMS -->
+  <div class="faq-section">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">What happens if I try to translate something inappropriate?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Before every translation, CultureReads runs an automatic safety check. If the text contains anything not appropriate for students under 14 — such as swear words, violent content, hate speech, or adult themes — the translation is blocked and a friendly message appears asking you to try different text.</p>
+        <p>This check happens silently in the background before the translation even starts, so inappropriate content never makes it through.</p>
+        <div class="warn">⚠️ CultureReads is designed for educational use. Please keep content respectful and age-appropriate.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Can my child use CultureReads safely on their own?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes. CultureReads was specifically designed with children aged 8–14 in mind. The built-in content safety system screens all text before translating it. The AI is also instructed to write cultural notes in age-appropriate language and to never engage with content that isn't suitable for students.</p>
+        <p>As with all technology, we always recommend that parents stay involved and check in on what their children are doing online. But CultureReads is one of the safer translation tools available for young learners.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Does CultureReads use AI? Is that safe?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Yes — CultureReads uses Claude, an AI assistant made by Anthropic, to power its translations and cultural explanations. Anthropic is known for building AI that is safe, helpful, and trustworthy.</p>
+        <p>The AI is given specific instructions to act as a warm, knowledgeable cultural guide for students, to always write at an age-appropriate level, and to never produce content that is harmful or inappropriate. There are also two separate layers of safety checking built into CultureReads on top of that.</p>
+        <p>Your text is sent to the AI to generate a translation — it is not stored, shared, or used to train any AI models.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Is my text private? Who can see what I type?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Your text is sent securely to our translation system and then deleted — it is never stored in a database, never logged, and never seen by any person. CultureReads does not keep records of what you translate.</p>
+        <p>The connection between your device and our system is encrypted (you'll see the 🔒 padlock in your browser address bar), which means your text cannot be read by anyone in between.</p>
+        <div class="tip">💡 <strong>Think of it like a phone call</strong> — we help you have the conversation, but we don't record it.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">Are there any ads on CultureReads?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>No. CultureReads has no ads, no sponsored content, and no trackers. Nobody pays to appear on this site and nobody is collecting your browsing data to sell to advertisers. It is a clean, ad-free, mission-driven tool.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <div class="faq-section" id="troubleshooting">
+    <div class="section-header">
+      <div class="section-icon icon-coral">🔧</div>
+      <div>
+        <div class="section-title">Troubleshooting</div>
+        <div class="section-subtitle">Something not working? Here are the most common fixes.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">The translation isn't loading — what do I do?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>First, check that you have a working internet connection — CultureReads needs to be online to translate. Then try these steps:</p>
+        <ul>
+          <li>Wait a few seconds and try again — sometimes the AI takes a moment</li>
+          <li>Check that you've selected a language in the "Into" dropdown — this is easy to miss</li>
+          <li>Try refreshing the page (pull down on mobile, or press F5 on a computer)</li>
+          <li>If you've done 20 translations in one session, refresh to reset your limit</li>
+          <li>Try a different browser — Chrome works best</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">The Read Aloud button isn't working or sounds wrong.</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Read Aloud uses your device's built-in voice system. A few things to check:</p>
+        <ul>
+          <li>Make sure your device volume is turned up</li>
+          <li>Some browsers (especially older ones) don't support all languages for speech — try Chrome or Safari</li>
+          <li>For languages like Hmong or Tigrinya, your device may not have a voice installed — the button will still work but the voice may default to English</li>
+          <li>On iPhone, make sure you have speech voices downloaded: Settings → Accessibility → Spoken Content → Voices</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">The image scan didn't find any text — what went wrong?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>Image scanning works best with clear, well-lit photos. Here are the most common reasons it fails and how to fix them:</p>
+        <ul>
+          <li><strong>Blurry photo:</strong> Hold your phone still and tap the screen to focus before taking the shot</li>
+          <li><strong>Poor lighting:</strong> Move to a brighter area or turn on a light</li>
+          <li><strong>Text too small:</strong> Move closer to the text before photographing</li>
+          <li><strong>Angled or curved text:</strong> Try to photograph the text as flat-on as possible</li>
+          <li><strong>Handwriting:</strong> Handwritten text is much harder to read than printed text</li>
+        </ul>
+        <p>If scanning still doesn't work, you can always type or paste the text manually into the text box.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">I see an error message saying "Failed to fetch" — what does that mean?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>This usually means CultureReads couldn't connect to the translation service. The most common causes are:</p>
+        <ul>
+          <li>Your internet connection dropped — check your WiFi or mobile data</li>
+          <li>A temporary outage — wait 30 seconds and try again</li>
+          <li>A very strict network (like some school networks) blocking certain websites — try on a different connection</li>
+        </ul>
+        <p>If the problem keeps happening, try refreshing the page or opening CultureReads in a different browser.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">The translation looks wrong or doesn't make sense.</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>AI translations are very good but not perfect — especially for rare languages, complex idioms, or very specialised text. A few things that can help:</p>
+        <ul>
+          <li>Make sure you've selected the correct "From" language — translating from the wrong source language will give strange results</li>
+          <li>Break long or complex text into shorter sections and translate them one at a time</li>
+          <li>For important documents like medical or legal forms, always have a human translator or professional verify the result</li>
+        </ul>
+        <div class="warn">⚠️ <strong>Important:</strong> CultureReads is a helpful learning and communication tool, but for critical decisions — especially medical, legal, or safety-related — please use a qualified human translator.</div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span class="faq-q-text">How do I report something inappropriate?</span>
+        <span class="faq-chevron">▼</span>
+      </div>
+      <div class="faq-a">
+        <p>After any translation, you'll see a small <strong>"🚩 Report inappropriate content"</strong> link at the bottom right of the translation box. Clicking it will open an email pre-filled with the details of what was translated, which you can send directly to our team.</p>
+        <p>We review every report and take all concerns seriously. Thank you for helping keep CultureReads safe for everyone.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="contact-strip">
+    <h3>Still have a question?</h3>
+    <p>We'd love to hear from you. Reach out to Aria directly and she'll do her best to help.</p>
+    <a href="mailto:aria@ideasuperstar.com">✉️ Email Aria</a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="f-logo">Culture<span>Reads</span></div>
+  <p>Created by <strong style="color:rgba(255,255,255,0.8);">Aria Kottaka Raj</strong> · The Village School, Houston TX</p>
+  <p style="margin-top:6px;"><a href="index.html">← Back to CultureReads</a> &nbsp;·&nbsp; <a href="mailto:aria@ideasuperstar.com">Contact</a></p>
+</footer>
+
+<script>
+  function toggle(el) {
+    const item = el.parentElement;
+    const wasOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    // Open clicked if it was closed
+    if (!wasOpen) item.classList.add('open');
+  }
+</script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log('PWA ready'))
+        .catch(err => console.log('SW error:', err));
+    });
+  }
+</script>
+</body>
+</html>

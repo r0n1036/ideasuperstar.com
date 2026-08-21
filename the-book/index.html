@@ -215,6 +215,28 @@
     .hero-title { font-size: 2rem; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
   }
+
+  /* ── iOS SAFE AREA FIX ── */
+  /* Pushes nav below iPhone status bar / notch */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    nav {
+      padding-top: env(safe-area-inset-top);
+      height: calc(70px + env(safe-area-inset-top));
+    }
+    body {
+      /* Prevent content from hiding under bottom home bar */
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+  @media (max-width: 768px) {
+    @supports (padding-top: env(safe-area-inset-top)) {
+      nav {
+        height: calc(58px + env(safe-area-inset-top));
+        padding-left: calc(16px + env(safe-area-inset-left));
+        padding-right: calc(16px + env(safe-area-inset-right));
+      }
+    }
+  }
 </style>
 </head>
 <body>

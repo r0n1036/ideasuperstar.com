@@ -4,7 +4,7 @@
   "description": "Inclusion. Diversity. Equity. Awareness. A platform by Aria Kottaka Raj.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FDFCF8",
+  "background_color": "#1D6A5A",
   "theme_color": "#1D6A5A",
   "orientation": "portrait-primary",
   "icons": [
@@ -19,6 +19,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }

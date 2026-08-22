@@ -50,6 +50,24 @@
   #onboarding-tip .tip-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: rgba(255,255,255,0.5); cursor: pointer; font-size: 1.1rem; line-height: 1; }
   main { max-width: 1160px; margin: 0 auto; padding: 32px 20px 48px; }
   .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+
+  /* ── WHY CULTUREREADS SECTION ── */
+  .why-section { max-width: 1160px; margin: 0 auto; padding: 0 20px 28px; }
+  .why-pill-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: center; margin-bottom: 10px; }
+  .why-pill { display: inline-flex; align-items: center; gap: 5px; background: var(--teal-light); color: var(--teal); border-radius: 50px; padding: 5px 13px; font-family: var(--font-head); font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+  .why-toggle-btn { display: flex; align-items: center; gap: 6px; background: none; border: none; font-family: var(--font-head); font-size: 0.78rem; font-weight: 800; color: var(--teal-mid); cursor: pointer; margin: 0 auto; padding: 4px 12px; border-radius: 50px; transition: background 0.2s; }
+  .why-toggle-btn:hover { background: var(--teal-light); }
+  .why-toggle-btn .chevron { transition: transform 0.25s; display: inline-block; }
+  .why-toggle-btn.open .chevron { transform: rotate(180deg); }
+  .why-grid-wrap { display: none; margin-top: 16px; }
+  .why-grid-wrap.open { display: block; }
+  .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  @media (max-width: 860px) { .why-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 500px) { .why-grid { grid-template-columns: 1fr; } }
+  .why-card { background: var(--white); border-radius: var(--radius-md); border: 1.5px solid var(--border); padding: 16px 14px; box-shadow: var(--shadow-sm); }
+  .why-icon { font-size: 1.4rem; margin-bottom: 6px; display: block; }
+  .why-card-title { font-family: var(--font-head); font-weight: 800; font-size: 0.8rem; color: var(--teal); margin-bottom: 4px; }
+  .why-card-desc { font-family: var(--font-body); font-size: 0.76rem; color: var(--muted); line-height: 1.5; }
   /* ── MOBILE STYLES — desktop unchanged above 760px ── */
   @media (max-width: 760px) {
     /* Layout */
@@ -208,8 +226,7 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner-text { font-family: var(--font-head); font-weight: 700; color: var(--teal); font-size: 0.9rem; }
   .lang-badge { display: inline-flex; align-items: center; gap: 5px; background: var(--teal); color: var(--white); border-radius: 50px; padding: 3px 12px; font-family: var(--font-head); font-weight: 800; font-size: 0.78rem; }
-  .privacy-strip { background: var(--teal-pale); border: 1.5px solid var(--teal-light); border-radius: var(--radius-md); padding: 12px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-family: var(--font-head); font-size: 0.82rem; font-weight: 600; color: var(--teal); }
-  .privacy-strip .pr-icon { font-size: 1.1rem; flex-shrink: 0; }
+
   .report-bar { display: flex; align-items: center; justify-content: flex-end; margin-top: 8px; }
   .report-link { font-family: var(--font-head); font-size: 0.75rem; font-weight: 700; color: var(--muted); background: none; border: none; cursor: pointer; text-decoration: underline; }
   .report-link:hover { color: var(--coral); }
@@ -289,8 +306,8 @@
 
 <div class="hero">
   <div class="hero-flags">🇺🇸 🇪🇸 🇸🇦 🇮🇳 🇰🇭 🇳🇬 🇵🇭 🇪🇹 🇻🇳 🇸🇴</div>
-  <h1>Read it. Hear it.<br><em>Understand it.</em></h1>
-  <p>Paste any text and get instant translation, pronunciation help, and cultural context — in 30+ languages, including languages that don't always get the spotlight.</p>
+  <h1>Not just translated.<br><em>Actually understood.</em></h1>
+  <p>Most translators give you words. CultureReads gives you understanding — with cultural context, pronunciation help, and explanations that go beyond the words, in 30+ languages including the ones that rarely get the spotlight.</p>
   <div class="word-of-day">
     <span class="wod-label">✨ Word of the Day:</span>
     <span class="wod-word" id="wod-word">Loading...</span>
@@ -311,9 +328,71 @@
       <div class="ff-text" id="fun-fact-text">There are over 7,000 languages spoken in the world today — and about half of them are in danger of disappearing.</div>
     </div>
   </div>
-  <div class="privacy-strip">
-    <span class="pr-icon">🔒</span>
-    <span>CultureReads does not store, save, or share any text you enter. All translations happen in real time and are never recorded. This is a safe space for learning.</span>
+
+</div>
+
+
+<div style="background:var(--bg);padding:16px 0 8px;">
+  <div class="why-section">
+    <!-- Always-visible pill row -->
+    <div class="why-pill-row">
+      <span class="why-pill">🏛️ Cultural Context</span>
+      <span class="why-pill">👨‍👩‍👧 Built for Families</span>
+      <span class="why-pill">🛡️ Content Safe</span>
+      <span class="why-pill">🔊 Read Aloud</span>
+      <span class="why-pill">📷 Image Scan</span>
+      <span class="why-pill">🌍 30+ Languages</span>
+      <span class="why-pill">👧🏽 Made by a Young Changemaker</span>
+      <span class="why-pill">🚫 No Ads · No Data</span>
+    </div>
+    <!-- Expandable detail -->
+    <button class="why-toggle-btn" id="why-toggle" onclick="toggleWhy()">
+      Learn what makes us different <span class="chevron">▼</span>
+    </button>
+    <div class="why-grid-wrap" id="why-grid-wrap">
+      <div class="why-grid">
+        <div class="why-card">
+          <span class="why-icon">🏛️</span>
+          <div class="why-card-title">Cultural Context</div>
+          <div class="why-card-desc">Explains idioms, cultural references, and untranslatable phrases — the things standard translators miss entirely.</div>
+        </div>
+        <div class="why-card">
+          <span class="why-icon">👨‍👩‍👧</span>
+          <div class="why-card-title">Built for Families</div>
+          <div class="why-card-desc">Designed specifically for students and newcomer families — not a generic tool built for nobody in particular.</div>
+        </div>
+        <div class="why-card">
+          <span class="why-icon">🛡️</span>
+          <div class="why-card-title">Content Safety</div>
+          <div class="why-card-desc">Every submission is screened before translation. Safe for children aged 8–14 to use independently.</div>
+        </div>
+        <div class="why-card">
+          <span class="why-icon">🔊</span>
+          <div class="why-card-title">Read Aloud</div>
+          <div class="why-card-desc">Highlights each word as it's spoken — helping users connect written words to pronunciation in real time.</div>
+        </div>
+        <div class="why-card">
+          <span class="why-icon">📷</span>
+          <div class="why-card-title">Scan Any Image</div>
+          <div class="why-card-desc">Photograph a letter, sign, or document — CultureReads extracts the text and translates it instantly.</div>
+        </div>
+        <div class="why-card">
+          <span class="why-icon">🌍</span>
+          <div class="why-card-title">Underrepresented Languages</div>
+          <div class="why-card-desc">Somali, Amharic, Tigrinya, Hmong, Khmer and more — treated with the same care as major world languages.</div>
+        </div>
+        <div class="why-card">
+          <span class="why-icon">👧🏽</span>
+          <div class="why-card-title">Made by a Young Changemaker</div>
+          <div class="why-card-desc">Made by Aria Kottaka Raj, age 11 — a published author and young changemaker who saw a real need in her community and built something to address it.</div>
+        </div>
+        <div class="why-card">
+          <span class="why-icon">🚫</span>
+          <div class="why-card-title">No Ads. No Data. No Cost.</div>
+          <div class="why-card-desc">Completely free, no account required, no ads, and your text is never stored or shared. Ever.</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -441,6 +520,7 @@
         <button class="btn btn-primary" onclick="runTranslation()" id="translate-btn">🌐 Translate &amp; Explain</button>
       </div>
       <div class="error-msg" id="error-msg"></div>
+      <p style="font-family:var(--font-head);font-size:0.72rem;color:var(--muted);text-align:center;margin-top:8px;font-weight:600;">🔒 Your text is never stored, saved, or shared. Ever.</p>
     </div>
 
     <!-- RIGHT CARD -->
@@ -1077,7 +1157,16 @@ ALWAYS respond with ONLY valid JSON:
   }
   // ── END IMAGE OCR ───────────────────────────────────────────────────────
 
-  document.addEventListener('contextmenu', e => e.preventDefault());
+  function toggleWhy() {
+    const btn = document.getElementById('why-toggle');
+    const grid = document.getElementById('why-grid-wrap');
+    const isOpen = grid.classList.contains('open');
+    grid.classList.toggle('open', !isOpen);
+    btn.classList.toggle('open', !isOpen);
+    btn.querySelector('.chevron').textContent = isOpen ? '▼' : '▲';
+  }
+
+    document.addEventListener('contextmenu', e => e.preventDefault());
 
   // ── PWA SERVICE WORKER ─────────────────────────────────────────────────
   if ('serviceWorker' in navigator) {

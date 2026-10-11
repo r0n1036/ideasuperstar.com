@@ -225,6 +225,27 @@
       }
     }
   }
+
+  /* ── HAMBURGER MENU ── */
+  .hamburger { display: none; flex-direction: column; justify-content: center; align-items: center; gap: 5px; width: 44px; height: 44px; background: none; border: none; cursor: pointer; padding: 4px; border-radius: var(--radius-sm); transition: background 0.2s; flex-shrink: 0; }
+  .hamburger:hover { background: var(--teal-light); }
+  .hamburger span { display: block; width: 22px; height: 2px; background: var(--teal); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile drawer */
+  .mobile-nav { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 99; background: var(--white); flex-direction: column; padding-top: calc(70px + env(safe-area-inset-top)); padding-bottom: env(safe-area-inset-bottom); overflow-y: auto; }
+  .mobile-nav.open { display: flex; }
+  .mobile-nav a { font-family: var(--font-head); font-weight: 700; font-size: 1.1rem; color: var(--ink); text-decoration: none; padding: 18px 28px; border-bottom: 1px solid var(--teal-light); display: block; transition: background 0.15s, color 0.15s; }
+  .mobile-nav a:hover, .mobile-nav a.active { background: var(--teal-light); color: var(--teal); }
+  .mobile-nav .mobile-cta { background: var(--teal); color: var(--white); margin: 20px 28px; border-radius: var(--radius-md); text-align: center; padding: 14px 20px; border-bottom: none; }
+  .mobile-nav .mobile-cta:hover { background: var(--teal-mid); color: var(--white); }
+
+  @media (max-width: 768px) {
+    .hamburger { display: flex; }
+    .nav-links { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -244,6 +265,9 @@
     <li><a href="../index.html#aria">About Aria</a></li>
     <li><a href="mailto:aria@ideasuperstar.com" class="nav-cta">Contact</a></li>
   </ul>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
 </nav>
 
 <div class="hero">
@@ -460,5 +484,13 @@
     });
   }
 </script>
+<div class="mobile-nav" id="mobile-nav">
+    <a href="../index.html">Home</a>
+    <a href="index.html" class="active">The Book</a>
+    <a href="../culturereads/index.html">CultureReads</a>
+    <a href="../impact/index.html">Impact & Recognition</a>
+    <a href="../community/index.html">Community</a>
+    <a href="mailto:aria@ideasuperstar.com" class="mobile-cta">Contact</a>
+</div>
 </body>
 </html>

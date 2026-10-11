@@ -492,5 +492,32 @@
     <a href="../community/index.html">Community</a>
     <a href="mailto:aria@ideasuperstar.com" class="mobile-cta">Contact</a>
 </div>
+<script>
+  function toggleMenu() {
+    var btn = document.getElementById('hamburger');
+    var nav = document.getElementById('mobile-nav');
+    if (!btn || !nav) return;
+    var isOpen = nav.classList.contains('open');
+    if (isOpen) {
+      btn.classList.remove('open');
+      nav.classList.remove('open');
+      document.body.style.overflow = '';
+    } else {
+      btn.classList.add('open');
+      nav.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    var links = document.querySelectorAll('.mobile-nav a');
+    for (var i = 0; i < links.length; i++) {
+      links[i].addEventListener('click', function() {
+        document.getElementById('hamburger').classList.remove('open');
+        document.getElementById('mobile-nav').classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    }
+  });
+</script>
 </body>
 </html>
